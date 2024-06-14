@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+главная страница
+{% endblock %}
+
+
+{% block body%}
+<body>
+    </br>
+    <form action="{% url 'index' %}" method="post">
+        {% csrf_token %}
+        <label for="channel_id">Введите ID канала:</label>
+        <input type="text" id="username" name="username">
+        <button type="submit">Далее</button>
+    </form>
+    </br>
+    <a href="/result">топ просмотров</a>
+    </br>
+    <a href="/result">топ сабов</a>
+
+</body>
+
+{% endblock %}}

@@ -1,0 +1,14 @@
+html, body {
+	font-family: 'Arial';
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	width: 100%;
+	color: #444;
+	background: rgb(50, 50, 50);
+}
+
+.cvet {
+    color: white;
+	background: rgb(33, 37, 41);
+}
