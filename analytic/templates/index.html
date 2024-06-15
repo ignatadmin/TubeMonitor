@@ -1,24 +1,27 @@
 {% extends 'base.html' %}
 
 {% block title %}
-главная страница
+    Главная страница
 {% endblock %}
 
+{% block body %}
+<div style="margin: 50px auto; width: 50%;">
+    <h1 style="text-align: center;">Аналитика видео и каналов</h1>
 
-{% block body%}
-<body>
-    </br>
-    <form action="{% url 'index' %}" method="post">
+    <form action="{% url 'index' %}" method="post" style="text-align: center; margin-top: 20px;">
         {% csrf_token %}
-        <label for="channel_id">Введите ID канала:</label>
-        <input type="text" id="username" name="username">
-        <button type="submit">Далее</button>
+        <label for="channel_id">Введите ссылку:</label>
+        <input type="text" id="channel_url" name="channel_url" style="margin-left: 10px;">
+        <button type="submit" style="margin-left: 10px;">
+            <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-search-strong-512.png" alt="Search Icon" style="width: 20px; height: 20px;">
+        </button>
     </form>
-    </br>
-    <a href="/result">топ просмотров</a>
-    </br>
-    <a href="/result">топ сабов</a>
 
-</body>
-
-{% endblock %}}
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="/result" class="btn btn-primary" style="margin-right: 20px;">Топ просмотров</a>
+        </br>
+        </br>
+        <a href="/result" class="btn btn-primary">Топ сабов</a>
+    </div>
+</div>
+{% endblock %}

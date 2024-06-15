@@ -4,6 +4,7 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('result', views.result, name='result'),
+    path('toplist', views.toplist, name='toplist'),
+    path('channel/<str:id>', views.channel, name='channel'),
 
 ]

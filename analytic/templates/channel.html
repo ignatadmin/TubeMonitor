@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}
+аналитика канала
+{% endblock %}
+
+{% block body %}
+<div style="margin: 50px auto; width: 50%;">
+    <h1>Информация о канале</h1>
+
+    {% if channel_data %}
+        <h2>{{ channel_data.snippet.title }}</h2>
+        <p>Subscriber Count: {{ channel_data.statistics.subscriberCount }}</p>
+        <p>View Count: {{ channel_data.statistics.viewCount }}</p>
+        <p>Video Count: {{ channel_data.statistics.videoCount }}</p>
+
+        <h3>Description</h3>
+        <p>{{ channel_data.snippet.description }}</p>
+
+        <h3>Published At</h3>
+        <p>{{ channel_data.snippet.publishedAt }}</p>
+
+        <h3>Country</h3>
+        <p>{{ channel_data.snippet.country }}</p>
+
+    {% else %}
+    <p>Channel not found</p>
+    {% endif %}
+</div>
+{% endblock %}
