@@ -1,28 +1,45 @@
 from googleapiclient.discovery import build
 from django.shortcuts import render, redirect
 from urllib.parse import urlparse
+from django.views.generic import CreateView
+
 import os
 import requests
 
 
-def index(request):
-    if request.method == 'POST':
-        channel_url = request.POST.get('channel_url')
-        parsed_url = urlparse(channel_url)
-        path = parsed_url.path.strip('/')
-
-        if path.startswith('channel/'):
-            channel_id = path.split('/')[-1]
+class Index(CreateView):
+    def post(self, request):
+        API_KEY = os.environ.get('API_KEY')
+        url = request.POST.get('url')
+        parsed_url = urlparse(url)
+        if parsed_url.netloc == "youtu.be" or parsed_url.path == "/watch":
+            if parsed_url.netloc == "youtu.be":
+                path = parsed_url.path.strip('/')
+            elif parsed_url.path == "/watch":
+                path = parsed_url.query.strip('/v=')
+            video_id = path.split('/')[-1]
+            return redirect('video', id=video_id)
         else:
-            username = path.split('@')[-1]
-            api_key = os.environ.get('API_KEY')
-            url = f'https://www.googleapis.com/youtube/v3/channels?part=id&forHandle={username}&key={api_key}'
-            response = requests.get(url)
-            data = response.json()
-            channel_id = data['items'][0]['id']
+            path = parsed_url.path.strip('/')
+            if path.startswith('channel/'):
+                channel_id = path.split('/')[-1]
+            else:
+                if path.startswith(('c/', 'user/')):
+                    username = path.split('/')[-1]
+                else:
+                    username = path.split('@')[-1]
+                youtube = build('youtube', 'v3', developerKey=API_KEY)
 
-        return redirect('channel', id=channel_id)
-    return render(request, 'index.html')
+                request_yt = youtube.channels().list(
+                    part='id',
+                    forHandle=username
+                )
+                response = request_yt.execute()
+                channel_id = response['items'][0]['id']
+            return redirect('channel', id=channel_id)
+
+    def get(self, request):
+        return render(request, 'index.html')
 
 
 def channel(request, id):
@@ -37,6 +54,20 @@ def channel(request, id):
     response = request_yt.execute()
     channel_data = response['items'][0] if 'items' in response else None
     return render(request, 'channel.html', {'channel_data': channel_data})
+
+
+def video(request, id):
+    API_KEY = os.environ.get('API_KEY')
+    youtube = build('youtube', 'v3', developerKey=API_KEY)
+
+    request_yt = youtube.videos().list(
+        part='snippet,statistics',
+        id=id
+    )
+
+    response = request_yt.execute()
+    video_data = response['items'][0] if 'items' in response else None
+    return render(request, 'video.html', {'video_data': video_data})
 
 
 def toplist(request):

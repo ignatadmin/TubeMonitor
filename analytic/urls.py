@@ -1,10 +1,11 @@
 from django.urls import path, include
 
-from . import views
+from .views import *
 
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('toplist', views.toplist, name='toplist'),
-    path('channel/<str:id>', views.channel, name='channel'),
+    path('', Index.as_view(), name='index'),
+    path('toplist', toplist, name='toplist'),
+    path('channel/<str:id>', channel, name='channel'),
+    path('video/<str:id>', video, name='video'),
 
 ]

@@ -11,17 +11,17 @@
     <form action="{% url 'index' %}" method="post" style="text-align: center; margin-top: 20px;">
         {% csrf_token %}
         <label for="channel_id">Введите ссылку:</label>
-        <input type="text" id="channel_url" name="channel_url" style="margin-left: 10px;">
+        <input type="text" id="url" name="url" style="margin-left: 10px;">
         <button type="submit" style="margin-left: 10px;">
             <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-search-strong-512.png" alt="Search Icon" style="width: 20px; height: 20px;">
         </button>
     </form>
 
     <div style="text-align: center; margin-top: 20px;">
-        <a href="/result" class="btn btn-primary" style="margin-right: 20px;">Топ просмотров</a>
+        <a href="/toplist" class="btn btn-primary" style="margin-right: 20px;">Топ просмотров</a>
         </br>
         </br>
-        <a href="/result" class="btn btn-primary">Топ сабов</a>
+        <a href="/toplist" class="btn btn-primary">Топ сабов</a>
     </div>
 </div>
 {% endblock %}

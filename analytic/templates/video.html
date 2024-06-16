@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}
+аналитика видео
+{% endblock %}
+
+{% block body %}
+<div style="margin: 50px auto; width: 50%;">
+    <h1>Информация о видео</h1>
+
+    {% if video_data %}
+        <h2>{{ video_data.snippet.title }}</h2>
+        <p>View Count: {{ video_data.statistics.viewCount }}</p>
+    {% else %}
+    <p>Video not found</p>
+    {% endif %}
+</div>
+{% endblock %}
