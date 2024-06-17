@@ -2,9 +2,9 @@ from googleapiclient.discovery import build
 from django.shortcuts import render, redirect
 from urllib.parse import urlparse
 from django.views.generic import CreateView
+from .models import TopChannels
 
 import os
-import requests
 
 
 class Index(CreateView):
@@ -70,7 +70,7 @@ def video(request, id):
     return render(request, 'video.html', {'video_data': video_data})
 
 
-def toplist(request):
+def toplist_videos(request):
     api_key = os.environ.get('API_KEY')
     youtube = build('youtube', 'v3', developerKey=api_key)
     playlist_id = 'PL11E57E1166929B60'
@@ -116,4 +116,22 @@ def toplist(request):
 
     context = {'videos_info': videos_info}
 
-    return render(request, 'toplist.html', context)
+    return render(request, 'toplist-videos.html', context)
+
+
+def toplist_channels(request):
+    queryset = TopChannels.objects.all()
+    channels_info = []
+
+    for top_channel in queryset:
+        API_KEY = os.environ.get('API_KEY')
+        youtube = build('youtube', 'v3', developerKey=API_KEY)
+        request_yt = youtube.channels().list(
+            part='snippet,statistics',
+            id=top_channel.channel_id
+        )
+        response = request_yt.execute()
+        channel_data = response['items'][0] if 'items' in response else None
+        if channel_data:
+            channels_info.append(channel_data)
+    return render(request, 'toplist-channels.html', {'channels_data': channels_info})
