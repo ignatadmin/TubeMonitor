@@ -1,72 +1,34 @@
-from googleapiclient.discovery import build
 from django.shortcuts import render, redirect
-from urllib.parse import urlparse
 from django.views.generic import CreateView
-from .models import TopChannels
+from .services import *
+from .models import *
 
 import os
 
 
 class Index(CreateView):
-    def post(self, request):
-        API_KEY = os.environ.get('API_KEY')
+    def post(self, request, *args, **kwargs):
         url = request.POST.get('url')
         parsed_url = urlparse(url)
-        if parsed_url.netloc == "youtu.be" or parsed_url.path == "/watch":
-            if parsed_url.netloc == "youtu.be":
-                path = parsed_url.path.strip('/')
-            elif parsed_url.path == "/watch":
-                path = parsed_url.query.strip('/v=')
-            video_id = path.split('/')[-1]
-            return redirect('video', id=video_id)
+        request.session['parsed_url'] = parsed_url.geturl()
+        if parsed_url.netloc == "youtu.be" or parsed_url.path.startswith("/watch"):
+            return redirect('video')
         else:
-            path = parsed_url.path.strip('/')
-            if path.startswith('channel/'):
-                channel_id = path.split('/')[-1]
-            else:
-                if path.startswith(('c/', 'user/')):
-                    username = path.split('/')[-1]
-                else:
-                    username = path.split('@')[-1]
-                youtube = build('youtube', 'v3', developerKey=API_KEY)
+            return redirect('channel')
 
-                request_yt = youtube.channels().list(
-                    part='id',
-                    forHandle=username
-                )
-                response = request_yt.execute()
-                channel_id = response['items'][0]['id']
-            return redirect('channel', id=channel_id)
-
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         return render(request, 'index.html')
 
 
-def channel(request, id):
-    API_KEY = os.environ.get('API_KEY')
-    youtube = build('youtube', 'v3', developerKey=API_KEY)
-
-    request_yt = youtube.channels().list(
-        part='snippet,statistics',
-        id=id
-    )
-
-    response = request_yt.execute()
-    channel_data = response['items'][0] if 'items' in response else None
+def channel(request):
+    parsed_url_str = request.session.get('parsed_url')
+    channel_data = get_channel_data(parsed_url_str)
     return render(request, 'channel.html', {'channel_data': channel_data})
 
 
-def video(request, id):
-    API_KEY = os.environ.get('API_KEY')
-    youtube = build('youtube', 'v3', developerKey=API_KEY)
-
-    request_yt = youtube.videos().list(
-        part='snippet,statistics',
-        id=id
-    )
-
-    response = request_yt.execute()
-    video_data = response['items'][0] if 'items' in response else None
+def video(request):
+    parsed_url_str = request.session.get('parsed_url')
+    video_data = get_video_data(parsed_url_str)
     return render(request, 'video.html', {'video_data': video_data})
 
 
