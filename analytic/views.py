@@ -1,9 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic import CreateView
 from .services import *
-from .models import *
-
-import os
 
 
 class Index(CreateView):

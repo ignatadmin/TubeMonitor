@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from googleapiclient.discovery import build
 from urllib.parse import urlparse
 import os
@@ -19,12 +18,16 @@ def get_channel_data(parsed_url_str):
     else:
         if path.startswith(('c/', 'user/')):
             username = path.split('/')[-1]
+            data_api = my_request.channels().list(
+                part='snippet,statistics',
+                forUsername=username
+            )
         else:
             username = path.split('@')[-1]
-        data_api = my_request.channels().list(
-            part='snippet,statistics',
-            forUsername=username
-        )
+            data_api = my_request.channels().list(
+                part='snippet,statistics',
+                forHandle=username
+            )
     response = data_api.execute()
     channel_data = response['items'][0] if 'items' in response else None
     return channel_data
@@ -93,7 +96,7 @@ def get_toplist_videos():
     return context
 
 
-def get_toplist_channels(request):
+def get_toplist_channels():
     queryset = TopChannels.objects.all()
     channels_info = []
 
