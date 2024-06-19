@@ -12,20 +12,20 @@ def get_channel_data(parsed_url_str):
     if path.startswith('channel/'):
         channel_id = path.split('/')[-1]
         data_api = my_request.channels().list(
-            part='snippet,statistics',
+            part='snippet,statistics,status',
             id=channel_id
         )
     else:
         if path.startswith(('c/', 'user/')):
             username = path.split('/')[-1]
             data_api = my_request.channels().list(
-                part='snippet,statistics',
+                part='snippet,statistics,status',
                 forUsername=username
             )
         else:
             username = path.split('@')[-1]
             data_api = my_request.channels().list(
-                part='snippet,statistics',
+                part='snippet,statistics,status',
                 forHandle=username
             )
     response = data_api.execute()
@@ -43,7 +43,7 @@ def get_video_data(parsed_url_str):
     video_id = path.split('/')[-1]
     youtube = build('youtube', 'v3', developerKey=API_KEY)
     request_yt = youtube.videos().list(
-        part='snippet,statistics',
+        part='snippet,statistics,status',
         id=video_id
     )
     response = request_yt.execute()
@@ -74,26 +74,41 @@ def get_toplist_videos():
     for item in playlist_items['items']:
         video_id = item['snippet']['resourceId']['videoId']
         video_info = youtube.videos().list(
-            part='snippet,statistics',
+            part='snippet,contentDetails,statistics,status',
             id=video_id
         ).execute()
 
-        title = video_info['items'][0]['snippet']['title']
-        thumbnail = video_info['items'][0]['snippet']['thumbnails']['default']['url']
-        view_count_formatting = formatting(video_info['items'][0]['statistics']['viewCount'])
-        channel_title = video_info['items'][0]['snippet']['channelTitle']
-        channel_id = video_info['items'][0]['snippet']['channelId']
+        snippet = video_info['items'][0]['snippet']
+        statistics = video_info['items'][0]['statistics']
+        status = video_info['items'][0]['status']
+
+        info = {
+            'published_at': snippet['publishedAt'],
+            'channel_id': snippet['channelId'],
+            'title': snippet['title'],
+            'description': snippet['description'],
+            'thumbnail': snippet['thumbnails']['default']['url'],
+            'channel_title': snippet['channelTitle'],
+            'category_id': snippet['categoryId'],
+            'default_language': snippet['defaultLanguage'],
+            'made_for_kids': status['madeForKids'],
+            'view_count_formatting': formatting(statistics['viewCount']),
+            'like_count_formatting': formatting(statistics['likeCount']),
+            'comment_count_formatting': formatting(statistics['commentCount'])
+        }
+
         channel_info = youtube.channels().list(
             part='snippet',
-            id=channel_id
+            id=info['channel_id']
         ).execute()
 
-        channel_icon = channel_info['items'][0]['snippet']['thumbnails']['default']['url']
-        videos_info.append({'title': title, 'thumbnail': thumbnail, 'view_count': view_count_formatting,
-                            'channel_title': channel_title, 'channel_icon': channel_icon})
+        info['channel_icon'] = channel_info['items'][0]['snippet']['thumbnails']['default']['url']
+
+        videos_info.append(info)
 
     context = {'videos_info': videos_info}
     return context
+
 
 
 def get_toplist_channels():
@@ -104,7 +119,7 @@ def get_toplist_channels():
         API_KEY = os.environ.get('API_KEY')
         youtube = build('youtube', 'v3', developerKey=API_KEY)
         request_yt = youtube.channels().list(
-            part='snippet,statistics',
+            part='snippet,statistics,status',
             id=top_channel.channel_id
         )
         response = request_yt.execute()
