@@ -51,59 +51,81 @@ def get_video_data(parsed_url_str):
     return video_data
 
 
-def get_toplist_videos():
-    key = settings.API_KEY
-    api_request = build('youtube', 'v3', developerKey=key)
-    playlist_id = 'PL11E57E1166929B60'
-    playlist_items = api_request.playlistItems().list(
-        part='snippet',
-        playlistId=playlist_id,
-        maxResults=10
-    ).execute()
+class UpdateVideosToplists:
+    def __init__(self):
+        self.api_key = settings.API_KEY
+        self.api_service_name = 'youtube'
+        self.api_version = 'v3'
+        self.playlist_id = 'PL11E57E1166929B60'
+        self.api_request = build(self.api_service_name, self.api_version, developerKey=self.api_key)
 
-    """убрать отсюда форматирование"""
+    def _fetch_playlist_items(self):
+        return self.api_request.playlistItems().list(
+            part='snippet',
+            playlistId=self.playlist_id,
+            maxResults=100
+        ).execute()['items']
 
-    def formatting(value_str):
-        value = float(value_str)
-        arr = [(0, ''), (3, ' тыс'), (6, ' млн'), (9, ' млрд'), (12, ' трлн')]
-        for n, s in arr[::-1]:
-            n = 10 ** n
-            if value >= n:
-                return str(round(value / n)) + s
-        return str(value)
-
-    videos_info = []
-    for item in playlist_items['items']:
-        video_id = item['snippet']['resourceId']['videoId']
-        request_data = api_request.videos().list(
-            part='snippet,contentDetails,statistics,status',
+    def _fetch_video_details(self, video_id):
+        video_response = self.api_request.videos().list(
+            part='snippet,statistics,status',
             id=video_id
         ).execute()
+        return video_response['items'][0] if video_response['items'] else None
 
-        snippet = request_data['items'][0]['snippet']
-        statistics = request_data['items'][0]['statistics']
-        status = request_data['items'][0]['status']
-
-        info = {
-            'channel_id': snippet['channelId'],
-            'title': snippet['title'],
-            'thumbnail': snippet['thumbnails']['maxres']['url'],
-            'channel_title': snippet['channelTitle'],
-            'made_for_kids': status['madeForKids'],
-            'view_count': statistics['viewCount'],
-        }
-
-        request_data = api_request.channels().list(
+    def _fetch_channel_details(self, channel_id):
+        channel_response = self.api_request.channels().list(
             part='snippet',
-            id=info['channel_id']
+            id=channel_id
         ).execute()
+        return channel_response['items'][0] if channel_response['items'] else None
 
-        info['channel_icon'] = request_data['items'][0]['snippet']['thumbnails']['maxres']['url']
+    def _update_videos(self, videos, model_class):
+        model_class.objects.all().delete()
 
-        videos_info.append(info)
+        for video in videos:
+            video_id = video['snippet']['resourceId']['videoId']
+            video_title = video['snippet']['title']
+            video_thumbnail = video['snippet']['thumbnails']['maxres']['url']
 
-    context = {'videos_info': videos_info}
-    return context
+            video_details = self._fetch_video_details(video_id)
+            if video_details:
+                stats = video_details['statistics']
+                view_count = int(stats['viewCount'])
+                channel_id = video['snippet']['channelId']
+
+                channel_details = self._fetch_channel_details(channel_id)
+                if channel_details:
+                    channel_title = channel_details['snippet']['title']
+                    channel_icon = channel_details['snippet']['thumbnails']['default']['url']
+
+                    model_class.objects.create(
+                        title=video_title,
+                        thumbnail=video_thumbnail,
+                        view_count=view_count,
+                        channel_icon=channel_icon,
+                        channel_id=channel_id,
+                        channel_title=channel_title
+                    )
+
+    def update_data_toplist_videos_not_for_kids(self):
+        playlist_items = self._fetch_playlist_items()
+
+        filtered_videos = [
+            video for video in playlist_items
+            if video['status']['madeForKids'] == False
+        ]
+
+        self._update_videos(filtered_videos, VideosByViewsNotKids)
+
+    def update_data_toplist_videos(self):
+        playlist_items = self._fetch_playlist_items()
+
+        self._update_videos(playlist_items, VideosByViews)
+
+    def update_video_toplists(self):
+        self.update_data_toplist_videos_not_for_kids()
+        self.update_data_toplist_videos()
 
 
 class UpdateChannelsToplists():
@@ -153,7 +175,7 @@ class UpdateChannelsToplists():
                 country=channel.country
             )
 
-    def update_top_channels(self):
+    def update_channel_toplists(self):
         models_to_update = [
             (ChannelsByVideos, None),
             (ChannelsByVideos, 'RU'),
