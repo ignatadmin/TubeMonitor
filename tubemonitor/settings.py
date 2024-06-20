@@ -8,6 +8,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
+API_KEY = os.environ.get('API_KEY')
+
 DEBUG = os.environ.get('DEBUG', '').lower() == 'true'
 
 ALLOWED_HOSTS = ['*']

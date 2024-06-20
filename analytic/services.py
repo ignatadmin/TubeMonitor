@@ -1,14 +1,14 @@
 from googleapiclient.discovery import build
 from urllib.parse import urlparse
-import os
+from django.conf import settings
 from .models import *
 
 
 def get_channel_data(parsed_url_str):
     parsed_url = urlparse(parsed_url_str)
     path = parsed_url.path.strip('/')
-    API_KEY = os.environ.get('API_KEY')
-    my_request = build('youtube', 'v3', developerKey=API_KEY)
+    key = settings.API_KEY
+    my_request = build('youtube', 'v3', developerKey=key)
     if path.startswith('channel/'):
         channel_id = path.split('/')[-1]
         data_api = my_request.channels().list(
@@ -34,14 +34,14 @@ def get_channel_data(parsed_url_str):
 
 
 def get_video_data(parsed_url_str):
-    API_KEY = os.environ.get('API_KEY')
+    key = settings.API_KEY
     parsed_url = urlparse(parsed_url_str)
     if parsed_url.netloc == "youtu.be":
         path = parsed_url.path.strip('/')
     elif parsed_url.path == "/watch":
         path = parsed_url.query.strip('/v=')
     video_id = path.split('/')[-1]
-    youtube = build('youtube', 'v3', developerKey=API_KEY)
+    youtube = build('youtube', 'v3', developerKey=key)
     request_yt = youtube.videos().list(
         part='snippet,statistics,status',
         id=video_id
@@ -52,14 +52,16 @@ def get_video_data(parsed_url_str):
 
 
 def get_toplist_videos():
-    api_key = os.environ.get('API_KEY')
-    youtube = build('youtube', 'v3', developerKey=api_key)
+    key = settings.API_KEY
+    youtube = build('youtube', 'v3', developerKey=key)
     playlist_id = 'PL11E57E1166929B60'
     playlist_items = youtube.playlistItems().list(
         part='snippet',
         playlistId=playlist_id,
         maxResults=10
     ).execute()
+
+    """убрать отсюда форматирование"""
 
     def formatting(value_str):
         value = float(value_str)
@@ -87,7 +89,7 @@ def get_toplist_videos():
             'channel_id': snippet['channelId'],
             'title': snippet['title'],
             'description': snippet['description'],
-            'thumbnail': snippet['thumbnails']['default']['url'],
+            'thumbnail': snippet['thumbnails']['maxres']['url'],
             'channel_title': snippet['channelTitle'],
             'category_id': snippet['categoryId'],
             'default_language': snippet['defaultLanguage'],
@@ -102,7 +104,7 @@ def get_toplist_videos():
             id=info['channel_id']
         ).execute()
 
-        info['channel_icon'] = channel_info['items'][0]['snippet']['thumbnails']['default']['url']
+        info['channel_icon'] = channel_info['items'][0]['snippet']['thumbnails']['maxres']['url']
 
         videos_info.append(info)
 
@@ -110,20 +112,64 @@ def get_toplist_videos():
     return context
 
 
+class UpdateChannelsToplists():
+    def update_data_toplist_channels(self):
+        """обноление общего списка топ каналов"""
+        queryset = TopChannels.objects.all()
 
-def get_toplist_channels():
-    queryset = TopChannels.objects.all()
-    channels_info = []
+        for top_channel in queryset:
+            key = settings.API_KEY
+            youtube = build('youtube', 'v3', developerKey=key)
+            request_yt = youtube.channels().list(
+                part='snippet,statistics,status',
+                id=top_channel.channel_id
+            )
+            response = request_yt.execute()
+            channel_data = response['items'][0] if 'items' in response else None
+            if channel_data:
+                top_channel.title = channel_data['snippet']['title']
+                top_channel.thumbnails = channel_data['snippet']['thumbnails']['default']['url']
+                top_channel.viewCount = int(channel_data['statistics']['viewCount'])
+                top_channel.subscriberCount = int(channel_data['statistics']['subscriberCount'])
+                top_channel.videoCount = int(channel_data['statistics']['videoCount'])
+                top_channel.madeForKids = channel_data['status'].get('madeForKids', False)
+                top_channel.country = channel_data['snippet'].get('country', '')
+                top_channel.save()
 
-    for top_channel in queryset:
-        API_KEY = os.environ.get('API_KEY')
-        youtube = build('youtube', 'v3', developerKey=API_KEY)
-        request_yt = youtube.channels().list(
-            part='snippet,statistics,status',
-            id=top_channel.channel_id
-        )
-        response = request_yt.execute()
-        channel_data = response['items'][0] if 'items' in response else None
-        if channel_data:
-            channels_info.append(channel_data)
-    return channels_info
+    def update_channels_data(self, model_cls, country_filter=None):
+        """обновление талблиц топ каналов по критериям"""
+        top_channels = TopChannels.objects.all()
+        if country_filter:
+            top_channels = top_channels.filter(country=country_filter)
+
+        top_channels = top_channels.order_by(
+            '-subscriberCount' if model_cls == ChannelsBySubs else
+            '-viewCount' if model_cls == ChannelsByViews else
+            '-videoCount'
+        )[:100]
+        model_cls.objects.all().delete()
+
+        for channel in top_channels:
+            model_cls.objects.create(
+                title=channel.title,
+                channel_id=channel.channel_id,
+                thumbnails=channel.thumbnails,
+                viewCount=channel.viewCount,
+                subscriberCount=channel.subscriberCount,
+                videoCount=channel.videoCount,
+                madeForKids=channel.madeForKids,
+                country=channel.country
+            )
+
+    def update_top_channels(self):
+        models_to_update = [
+            (ChannelsByVideos, None),
+            (ChannelsByVideos, 'RU'),
+            (ChannelsByViews, None),
+            (ChannelsByViews, 'RU'),
+            (ChannelsBySubs, None),
+            (ChannelsBySubs, 'RU'),
+        ]
+        self.update_data_toplist_channels()
+        for model_cls, country_filter in models_to_update:
+            self.update_channels_data(model_cls, country_filter)
