@@ -8,7 +8,6 @@ class ChannelBaseModel(models.Model):
     viewCount = models.IntegerField()
     subscriberCount = models.IntegerField()
     videoCount = models.IntegerField()
-    madeForKids = models.BooleanField()
     country = models.CharField()
 
     class Meta:
