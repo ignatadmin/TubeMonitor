@@ -30,10 +30,10 @@ def video(request):
 
 
 def toplist_videos(request):
-    context = get_toplist_videos()
-    return render(request, 'toplist-videos.html', context)
+    videos_info = ListTopVideos.objects.all()
+    return render(request, 'toplist-videos.html', {'videos_info': videos_info})
 
 
 def toplist_channels(request):
-    channels_info = get_toplist_channels()
+    channels_info = ListTopChannels.objects.all()
     return render(request, 'toplist-channels.html', {'channels_data': channels_info})

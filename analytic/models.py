@@ -4,7 +4,7 @@ from django.db import models
 class ListTopVideos(models.Model):
     title = models.CharField(default=None, null=True, verbose_name="название")
     thumbnail = models.CharField(default=None, null=True, verbose_name="миниатюра")
-    view_count = models.IntegerField(default=None, null=True, verbose_name="число просмотров")
+    view_count = models.BigIntegerField(default=None, null=True, verbose_name="число просмотров")
     channel_icon = models.CharField(default=None, null=True, verbose_name="иконка канала")
     channel_id = models.CharField(default=None, null=True, verbose_name="айди канала")
     channel_title = models.CharField(default=None, null=True, verbose_name="название канала")
@@ -22,9 +22,9 @@ class ListTopChannels(models.Model):
     title = models.CharField(default=None, null=True, verbose_name="название")
     channel_id = models.CharField(max_length=24, default=None, null=True, verbose_name="айди канала")
     thumbnails = models.CharField(default=None, null=True, verbose_name="миниатюра")
-    view_count = models.IntegerField(default=None, null=True, verbose_name="число просмотров")
-    subscriber_count = models.IntegerField(default=None, null=True, verbose_name="число подписчиков")
-    video_count = models.IntegerField(default=None, null=True, verbose_name="число видео")
+    view_count = models.BigIntegerField(default=None, null=True, verbose_name="число просмотров")
+    subscriber_count = models.BigIntegerField(default=None, null=True, verbose_name="число подписчиков")
+    video_count = models.BigIntegerField(default=None, null=True, verbose_name="число видео")
     country = models.CharField(default=None, null=True, verbose_name="страна")
 
     def __str__(self):

@@ -1,4 +1,5 @@
 from django.contrib import admin
-from .models import TopChannels
+from .models import *
 
-admin.site.register(TopChannels)
+admin.site.register(ListTopVideos)
+admin.site.register(ListTopChannels)

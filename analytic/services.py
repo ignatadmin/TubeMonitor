@@ -66,23 +66,24 @@ def update_video_toplist():
 
         for item in playlist_items['items']:
             video_id = item['snippet']['resourceId']['videoId']
-            request_data = api_request.videos().list(
+            video_request_data = api_request.videos().list(
                 part='snippet,contentDetails,statistics,status',
                 id=video_id
             ).execute()
 
-            channel_id = request_data['items'][0]['snippet']['channelId'],
-            title = request_data['items'][0]['snippet']['title'],
-            thumbnail = request_data['items'][0]['snippet']['thumbnails']['maxres']['url'],
-            channel_title = request_data['items'][0]['snippet']['channelTitle'],
-            made_for_kids = request_data['items'][0]['status']['madeForKids'],
-            view_count = request_data['items'][0]['statistics']['viewCount'],
+            channel_id = video_request_data['items'][0]['snippet']['channelId']
+            title = video_request_data['items'][0]['snippet']['title']
+            thumbnail = video_request_data['items'][0]['snippet']['thumbnails']['standard']['url']
+            channel_title = video_request_data['items'][0]['snippet']['channelTitle']
+            made_for_kids = video_request_data['items'][0]['status']['madeForKids']
+            view_count = video_request_data['items'][0]['statistics']['viewCount']
 
-            request_data = api_request.channels().list(
+            channel_request_data = api_request.channels().list(
                 part='snippet',
                 id=channel_id
             ).execute()
-            channel_icon = request_data['items'][0]['snippet']['thumbnails']['maxres']['url']
+
+            channel_icon = channel_request_data['items'][0]['snippet']['thumbnails']['default']['url']
 
             ListTopVideos.objects.create(
                 title=title,
@@ -112,8 +113,8 @@ def update_channel_toplist():
         if channel_data:
             top_channel.title = channel_data['snippet']['title']
             top_channel.thumbnails = channel_data['snippet']['thumbnails']['default']['url']
-            top_channel.viewCount = int(channel_data['statistics']['viewCount'])
-            top_channel.subscriberCount = int(channel_data['statistics']['subscriberCount'])
-            top_channel.videoCount = int(channel_data['statistics']['videoCount'])
+            top_channel.view_count = int(channel_data['statistics']['viewCount'])
+            top_channel.subscriber_count = int(channel_data['statistics']['subscriberCount'])
+            top_channel.video_count = int(channel_data['statistics']['videoCount'])
             top_channel.country = channel_data['snippet'].get('country', '')
             top_channel.save()
