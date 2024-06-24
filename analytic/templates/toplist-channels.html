@@ -1,38 +1,93 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Результаты каналов
-{% endblock %}
-
-{% block extra_css %}
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+топ 100 YouTube каналов по подписчикам
 {% endblock %}
 
 {% block body %}
-<div style="margin-left: 15%; margin-right: 15%;">
-    <h1 class="mt-5 mb-4">топ подписываемых каналов в мире</h1>
 
-    <div class="container">
-        <table class="table table-dark table-striped">
-            <thead>
-                <tr>
-                    <th>название</th>
-                    <th>подписчиков</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for channel in channels_data %}
-                    <tr>
-                        <td>{{ channel.snippet.title }}</td>
-                        <td>{{ channel.statistics.subscriberCount }}</td>
-                    </tr>
-                {% empty %}
-                    <tr>
-                        <td colspan="2">Нет доступных результатов</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<div style="margin-left: 10%; margin-right: 10%;">
+    <h1 class="mt-5 mb-4" style="text-align:center">топ 100 YouTube каналов по подписчикам</h1>
+    <div class="my-container">
+        <div class="left-content">
+            <div class="my-border">
+                <h1 class="container text-center">Топы</h1>
+                <hr>
+                <a class="iksweb" href="/toplist/videos" title="топ видео"> топ видео &nbsp; &nbsp; </a>
+                <a class="iksweb" href="/toplist/channels" title="топ каналов">топ каналов</a>
+            </div>
+            <br>
+            <div class="my-border">
+                <h1 class="container text-center">Сортировка</h1>
+                <hr>
+                <a class="iksweb" href="/toplist/channels/views" title="топ видео"> просмотры &nbsp; &nbsp; </a>
+                <a class="iksweb" href="/toplist/channels/subscribers" title="топ каналов">подписчики</a>
+            </div>
+            <script>
+                var currentPath = window.location.pathname;
+                document.querySelectorAll('.iksweb').forEach(function (link) {
+                    if (link.getAttribute('href') === currentPath && !link.closest('.navbar-nav')) {
+                        link.classList.add('active');
+                    }
+                });
+            </script>
+            <br>
+            <div class="my-border">
+                <h1 class="container text-center">Фильтры</h1>
+                <hr>
+                <div>
+                    <input class="my-size" type="checkbox" id="only_RU" name="only_RU" value="only_RU">
+                    <label class="my-text-size" for="finRot">&nbsp; только RU</label>
+                </div>
+                <br>
+                <div>
+                    <input class="my-size" type="checkbox" id="for_kids" name="for_kids" value="for_kids" checked>
+                    <label class="my-text-size" for="finRot">&nbsp; для детей</label>
+                </div>
+            </div>
+        </div>
+        <div class="right-content">
+            <div class="container">
+                <div class="my-border">
+                    <table class="table">
+                        <colgroup>
+                            <col style="width: 8%;">
+                            <col style="width: 15%;">
+                            <col style="width: 32%;">
+                            <col style="width: 15%;">
+                            <col style="width: 15%;">
+                            <col style="width: 15%;">
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th>Топ</th>
+                            <th></th>
+                            <th>канал</th>
+                            <th>подписчиков</th>
+                            <th>Просмотров</th>
+                            <th>видеороликов</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for channel in channels_data %}
+                        <tr class="vertical-center">
+                            <td>{{ forloop.counter }}</td>
+                            <td><img src="{{ channel.channel_icon }}" width="40" height="40"></td>
+                            <td class="my-leftside">{{ channel.title }}</td>
+                            <td>{{ channel.subscriber_count }}</td>
+                            <td>{{ channel.view_count }}</td>
+                            <td>{{ channel.video_count }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2">Нет доступных результатов</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
