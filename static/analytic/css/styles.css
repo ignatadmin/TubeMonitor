@@ -1,14 +1,158 @@
 html, body {
-	font-family: 'Arial';
-	margin: 0;
-	padding: 0;
-	height: 100%;
-	width: 100%;
-	color: #444;
-	background: rgb(50, 50, 50);
+    font-family: 'Arial';
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    color: white;
+    background: rgb(15, 15, 15);
+    font-size: 14px;
 }
 
-.cvet {
+.table {
+    background-color: rgb(25, 25, 25);
     color: white;
-	background: rgb(33, 37, 41);
+    border-color: rgb(50, 50, 50);
+    width: 100%;
+}
+
+.navbar {
+    background-color: rgb(25, 25, 25);
+    color: white;
+    font-size: 16px;
+}
+
+.my-border {
+    border: 2px solid #323232;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: rgb(25, 25, 25);
+    color: white;
+    border-color: rgb(50, 50, 50);
+}
+
+.my-border-lite {
+    border: 2px solid #323232;
+    border-radius: 10px;
+    padding: 10px;
+    color: #cccccc;
+    border-color: rgb(69, 69, 69);
+}
+
+.my-container {
+      display: flex;
+    }
+    .left-content {
+		flex: 1;
+		max-width: 20%;
+        margin-right: 30px;
+    }
+    .right-content {
+        flex: 1;
+        max-width: 80%;
+        text-align: right;
+    }
+
+th, td {
+    text-align: center;
+}
+
+.my-leftside {
+    text-align: left;
+}
+
+.my-text {
+    font-size: 14px;
+}
+
+.iksweb {
+    display: inline-block;
+    cursor: pointer;
+    font-size: 22px;
+    text-decoration: none;
+    padding: 17px 60px;
+    color: #ffffff;
+    background: 0;
+    border-radius: 12px;
+    border: 0px solid #354251;
+    margin-bottom: 10px;
+}
+
+.iksweb:hover {
+    background: #323232FF;
+    color: #ffffff;
+    border: 0px solid #354251;
+    transition: all 0.2s ease;
+}
+
+.active {
+    background-color: #323232;
+}
+
+.vertical-center {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.my-text-size {
+    font-size: 18px;
+}
+
+.my-size {
+    transform: scale(2);
+    margin-left: 60px
+}
+
+.my-dark {
+    background-color: #323232;
+    color: white;
+    border: #454545;
+}
+
+td img {
+    border-radius: 7px;
+}
+
+.video_preview img {
+    object-fit: cover;
+    width: 80px;
+    height: 45px;
+}
+
+.my-btn-space {
+    margin-right: 10px;
+}
+
+
+.container-my {
+  display: grid;
+  grid-template-columns: 70% 30%;
+}
+
+.mybtn {
+    display: inline-block;
+    cursor: pointer;
+    font-size: 22px;
+    text-decoration: none;
+    padding: 17px 60px;
+    color: #ffffff;
+    background: 0;
+    border-radius: 12px;
+    border: 2px solid #323232;
+    margin-bottom: 10px;
+}
+
+input {
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+button {
+    border-radius: 15px;
+}
+
+.container-my-btn {
+  display: grid;
+  grid-template-columns: 70% 70%;
 }

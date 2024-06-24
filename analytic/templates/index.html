@@ -1,26 +1,49 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    Главная страница
+Главная страница
 {% endblock %}
 
 {% block body %}
-<div style="margin: 50px auto; width: 50%;">
-    <h1 style="text-align: center;">Аналитика видео и каналов</h1>
-
-    <form action="{% url 'index' %}" method="post" style="text-align: center; margin-top: 20px;">
-        {% csrf_token %}
-        <label for="channel_id">Введите ссылку:</label>
-        <input type="text" id="url" name="url" style="margin-left: 10px;">
-        <button type="submit" style="margin-left: 10px;">
-            <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-search-strong-512.png" alt="Search" style="width: 20px; height: 20px;">
-        </button>
-    </form>
-
-    <div style="text-align: center; margin-top: 20px;">
-        <a href="/toplist/videos" class="btn btn-primary" style="margin-right: 20px;">Топ просмотров</a>
-        <br>
-        <a href="/toplist/channels" class="btn btn-primary">Топ сабов</a>
+<div style="margin: 200px auto;">
+    <div style="margin-left: 20%; margin-right: 25%;">
+        <div style="font-size: 150%;">
+            <div class="container-my">
+                <div>
+                    <h1 class="container text-center" style="font-weight: 550;">Введи ссылку<br/>на видео или канал</h1>
+                    <form action="{% url 'index' %}" method="post" style="text-align: center; margin-top: 20px;">
+                        {% csrf_token %}
+                        <input type="text" id="url" name="url" style="width: 70%; height: 40px; display: inline-block;">
+                        <button type="submit" style="display: inline-block;">
+                            <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-search-strong-512.png"
+                                 alt="Search" style="width: 20px; height: 20px;">
+                        </button>
+                    </form>
+                    <div class="container-my-btn" style="margin-left: 14%; margin-right: 36%;">
+                        <div style="margin: 25px auto;">
+                            <a class="mybtn" href="/" title="топ каналов">канал</a>
+                            <a class="mybtn" href="/" title="топ каналов">канал</a>
+                            <a class="mybtn" href="/" title="топ каналов">канал</a>
+                        </div>
+                        <div style="margin: 25px auto;">
+                            <a class="mybtn" href="/" title="топ каналов">видео</a>
+                            <a class="mybtn" href="/" title="топ каналов">видео</a>
+                            <a class="mybtn" href="/" title="топ каналов">видео</a>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div class="my-border">
+                        <h1 class="container text-center"> Список лучших </h1>
+                        <hr>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <a class="mybtn " href="/toplist/videos" title="топ видео"> топ видео &nbsp; &nbsp; </a>
+                            <a class="mybtn " href="/toplist/channels" title="топ каналов">топ каналов</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
