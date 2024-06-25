@@ -20,8 +20,8 @@
             <div class="my-border">
                 <h1 class="container text-center">Сортировка</h1>
                 <hr>
-                <a class="iksweb" href="/toplist/channels/views" title="топ видео"> просмотры &nbsp; &nbsp; </a>
-                <a class="iksweb" href="/toplist/channels/subscribers" title="топ каналов">подписчики</a>
+                <a class="iksweb" href="/toplist/channels/?sort=views" title="топ видео"> просмотры &nbsp; &nbsp; </a>
+                <a class="iksweb" href="/toplist/channels/?sort=subscribers" title="топ каналов">подписчики</a>
             </div>
             <script>
                 var currentPath = window.location.pathname;
@@ -80,7 +80,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="2">Нет доступных результатов</td>
+                            <td colspan="6">Нет доступных результатов</td>
                         </tr>
                         {% endfor %}
                         </tbody>

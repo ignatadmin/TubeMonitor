@@ -11,6 +11,7 @@
     {% if video_data %}
         <h2>{{ video_data.snippet.title }}</h2>
         <p>View Count: {{ video_data.statistics.viewCount }}</p>
+        <p><img src="{{ video_data.snippet.thumbnails.default.url }}" width="80" height="60"></p>
     {% else %}
     <p>Video not found</p>
     {% endif %}

@@ -156,3 +156,47 @@ button {
   display: grid;
   grid-template-columns: 70% 70%;
 }
+
+.container-my-up {
+      display: flex;
+    }
+    .left-content-up {
+		flex: 1;
+		max-width: 30%;
+        margin-right: 30px;
+    }
+    .right-content-up {
+        flex: 1;
+        max-width: 70%;
+        text-align: right;
+    }
+
+.container-my-down {
+      display: flex;
+    }
+    .left-content-down {
+		flex: 1;
+		max-width: 40%;
+        margin-right: 30px;
+    }
+    .right-content-down {
+        flex: 1;
+        max-width: 60%;
+        text-align: right;
+    }
+
+.my-text-size {
+    font-size: 16px;
+}
+
+
+.inline-block-here h1,
+.inline-block-here div  {
+    display: inline-block;
+    margin: 0;
+}
+
+.inline-block-here img {
+    display: inline-block;
+    margin-right: 10px;
+}

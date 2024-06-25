@@ -5,26 +5,45 @@
 {% endblock %}
 
 {% block body %}
-<div style="margin: 50px auto; width: 50%;">
-    <h1>Информация о канале</h1>
-
-    {% if channel_data %}
-        <h2>{{ channel_data.snippet.title }}</h2>
-        <p>Subscriber Count: {{ channel_data.statistics.subscriberCount }}</p>
-        <p>View Count: {{ channel_data.statistics.viewCount }}</p>
-        <p>Video Count: {{ channel_data.statistics.videoCount }}</p>
-
-        <h3>Description</h3>
-        <p>{{ channel_data.snippet.description }}</p>
-
-        <h3>Published At</h3>
-        <p>{{ channel_data.snippet.publishedAt }}</p>
-
-        <h3>Country</h3>
-        <p>{{ channel_data.snippet.country }}</p>
-
-    {% else %}
-    <p>Channel not found</p>
-    {% endif %}
+<div style="margin: 50px auto; margin-left: 20%; margin-right: 20%;" class="my-text-size">
+    <h1 class="container text-center" style="margin: 50px auto;">Информация о канале</h1>
+    <div class="my-border">
+        {% if channel_data %}
+        <div class="container-my-up">
+            <div class="left-content-up text-center">
+                <div class="inline-block-here">
+                    <h1><img src="{{ channel_data.snippet.thumbnails.medium.url }}" width="80" height="80"></h1>
+                    <div style="margin: 20px auto;">
+                        <h1>{{ channel_data.snippet.title }}</h1>
+                        <h2>{{ channel_data.snippet.customUrl }}</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="right-content-up text-center">
+                <h3>{% if channel_data.snippet.defaultLanguage %} язык: {{ channel_data.snippet.defaultLanguage }} {% endif %}</h3>
+                <h2>{% if channel_data.status.madeForKids %}
+                    для детей
+                    {% endif %}
+                </h2>
+                <img src="https://flagcdn.com/w40/{{ channel_data.snippet.country|lower }}.png"/>
+                <h3>дата регистрации: {{ channel_data.snippet.publishedAt|slice:":10" }}</h3>
+            </div>
+        </div>
+        <hr>
+        <div class="container-my-down">
+            <div style=" margin: 50px auto; margin-left: 1%;">
+                <h1>подписчиков: {{ channel_data.statistics.subscriberCount }}</h1>
+                <h1>просмотров: {{ channel_data.statistics.viewCount }}</h1>
+                <h1>видеороликов: {{ channel_data.statistics.videoCount }}</h1>
+            </div>
+            <div style="margin-left: 20%; margin-right: 5%;">
+                <h3 class="text-center">описание</h3>
+                <p>{{ channel_data.snippet.description|linebreaks|truncatechars:2000 }}</p>
+            </div>
+        </div>
+        {% else %}
+        <p>Канал не найден</p>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}
