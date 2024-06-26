@@ -5,15 +5,44 @@
 {% endblock %}
 
 {% block body %}
-<div style="margin: 50px auto; width: 50%;">
-    <h1>Информация о видео</h1>
-
-    {% if video_data %}
-        <h2>{{ video_data.snippet.title }}</h2>
-        <p>View Count: {{ video_data.statistics.viewCount }}</p>
-        <p><img src="{{ video_data.snippet.thumbnails.default.url }}" width="80" height="60"></p>
-    {% else %}
-    <p>Video not found</p>
-    {% endif %}
+<div style="margin: 50px auto; margin-left: 20%; margin-right: 20%;" class="my-text-size">
+    <h1 class="container text-center" style="margin: 50px auto;">Информация о видео</h1>
+    <div class="my-border">
+        {% if channel_data %}
+        <div class="container-my-up" style="margin: 20px auto;">
+            <div style="margin-left: 3%;">
+                <div>
+                    <p class="video-preview-video"><img src="{{ video_data.snippet.thumbnails.standard.url }}"
+                                                        width="640" height="480"></p>
+                    <h2>{{ video_data.snippet.title }}</h2>
+                    <h2>дата публикации: {{ video_data.snippet.publishedAt|slice:":10" }}</h2>
+                    <h2>язык: {{ video_data.snippet.defaultLanguage }}</h2>
+                    <h2>{% if channel_data.status.madeForKids %} для детей {% endif %} </h2>
+                </div>
+                <hr>
+                <div style="margin: 20px auto;">
+                    <h2>просмотров: {{ video_data.statistics.viewCount }}</h2>
+                    <h2>лайков: {{ video_data.statistics.likeCount }}</h2>
+                    <h2>коментариев: {{ video_data.statistics.commentCount }}</h2>
+                </div>
+            </div>
+            <div style=" margin-left: 5%; margin-right: 5%; ">
+                <div class="text-center">
+                    <div class="inline-block-here">
+                        <h1><img src="{{ channel_data.thumbnail.default.url }}" width="40" height="40"></h1>
+                        <h1>{{ channel_data.channel_title }}</h1>
+                    </div>
+                </div>
+                <hr>
+                <div style="margin: 20px auto;">
+                    <h1 class="text-center">описание</h1>
+                    <h2>{{ video_data.snippet.description|linebreaks|truncatechars:2000 }}</h2>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <h1>видео не найдено</h1>
+        {% endif %}
+    </div>
 </div>
 {% endblock %}

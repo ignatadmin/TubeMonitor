@@ -42,13 +42,22 @@ def get_video_data(parsed_url_str):
         path = parsed_url.query.strip('/v=')
     video_id = path.split('/')[-1]
     api_request = build('youtube', 'v3', developerKey=key)
-    request_data = api_request.videos().list(
+    video_request = api_request.videos().list(
         part='snippet,statistics,status',
         id=video_id
     )
-    response = request_data.execute()
-    video_data = response['items'][0] if 'items' in response else None
-    return video_data
+    video_request_data = video_request.execute()
+    if video_request_data:
+        channel_id = video_request_data['items'][0]['snippet']['channelId']
+        channel_request_data = api_request.channels().list(
+            part='snippet',
+            id=channel_id
+        ).execute()
+        thumbnail = channel_request_data['items'][0]['snippet']['thumbnails']
+        channel_title = channel_request_data['items'][0]['snippet']['title']
+    video_data = video_request_data['items'][0] if 'items' in video_request_data else None
+    channel_data = {'thumbnail': thumbnail, 'channel_title': channel_title}
+    return video_data, channel_data
 
 
 def update_video_toplist():

@@ -27,8 +27,8 @@ def channel(request):
 
 def video(request):
     parsed_url_str = request.session.get('parsed_url')
-    video_data = get_video_data(parsed_url_str)
-    return render(request, 'video.html', {'video_data': video_data})
+    video_data, channel_data = get_video_data(parsed_url_str)
+    return render(request, 'video.html', {'video_data': video_data, 'channel_data': channel_data})
 
 
 class TopListVideos(View):

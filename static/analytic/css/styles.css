@@ -126,7 +126,7 @@ td img {
 
 .container-my {
   display: grid;
-  grid-template-columns: 70% 30%;
+  grid-template-columns: 60% 40%;
 }
 
 .mybtn {
@@ -196,7 +196,19 @@ button {
     margin: 0;
 }
 
-.inline-block-here img {
+.inline-block-here {
     display: inline-block;
     margin-right: 10px;
+}
+
+.video-preview-video img {
+    object-fit: cover;
+    width: 460px;
+    height: 260px;
+}
+
+.video-preview-home img {
+    object-fit: cover;
+    width: 60px;
+    height: 40px;
 }
