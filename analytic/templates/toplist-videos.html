@@ -16,23 +16,37 @@
                 <a class="iksweb" href="/toplist/videos" title="топ видео"> топ видео &nbsp; &nbsp; </a>
                 <a class="iksweb" href="/toplist/channels" title="топ каналов">топ каналов</a>
             </div>
-            <script>
-                var currentPath = window.location.pathname;
-                document.querySelectorAll('.iksweb').forEach(function (link) {
-                    if (link.getAttribute('href') === currentPath && !link.closest('.navbar-nav')) {
-                        link.classList.add('active');
-                    }
-                });
-            </script>
             <br>
             <div class="my-border">
                 <h1 class="container text-center">Фильтры</h1>
                 <hr>
-                <div>
-                    <input class="my-size" type="checkbox" id="for_kids" name="for_kids" value="for_kids" checked>
-                    <label class="my-text-size" for="finRot">&nbsp; для детей</label>
-                </div>
+                <form id="filter-form" method="post" action="{% url 'toplist_videos' %}">
+                    {% csrf_token %}
+                    {% if for_kids %}
+                        <input class="my-size" type="checkbox" id="for_kids" name="for_kids" value="for_kids" checked
+                               onchange="document.getElementById('filter-form').submit()">
+                        <label class="my-text-size" for="for_kids">&nbsp; для детей</label>
+                    {% else %}
+                        <input class="my-size" type="checkbox" id="for_kids" name="for_kids" value="for_kids"
+                               onchange="document.getElementById('filter-form').submit()">
+                        <label class="my-text-size" for="for_kids">&nbsp; для детей</label>
+                    {% endif %}
+                </form>
             </div>
+            <script>
+                var currentPath = window.location.pathname;
+                var currentSearch = window.location.search;
+                var currentURL = currentPath + currentSearch;
+
+                document.querySelectorAll('.iksweb').forEach(function (link) {
+                    var linkPath = link.pathname;
+                    var linkSearch = link.search;
+                    var linkURL = linkPath + linkSearch;
+                    if (linkURL === currentURL && !link.closest('.navbar-nav')) {
+                        link.classList.add('active');
+                    }
+                });
+            </script>
         </div>
         <div class="right-content">
             <div class="container">

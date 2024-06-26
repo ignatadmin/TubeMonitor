@@ -64,6 +64,7 @@ def update_video_toplist():
     key = settings.API_KEY
     api_request = build('youtube', 'v3', developerKey=key)
     playlist_id = 'PL11E57E1166929B60'
+    next_page_token = None
     counter = 0
     ListTopVideos.objects.all().delete()
     while counter < 100:
@@ -71,6 +72,7 @@ def update_video_toplist():
             part='snippet',
             playlistId=playlist_id,
             maxResults=50,
+            pageToken=next_page_token
         ).execute()
 
         for item in playlist_items['items']:
@@ -82,7 +84,7 @@ def update_video_toplist():
 
             channel_id = video_request_data['items'][0]['snippet']['channelId']
             title = video_request_data['items'][0]['snippet']['title']
-            thumbnail = video_request_data['items'][0]['snippet']['thumbnails']['standard']['url']
+            thumbnail = video_request_data['items'][0]['snippet']['thumbnails']['default']['url']
             channel_title = video_request_data['items'][0]['snippet']['channelTitle']
             made_for_kids = video_request_data['items'][0]['status']['madeForKids']
             view_count = video_request_data['items'][0]['statistics']['viewCount']
@@ -103,8 +105,13 @@ def update_video_toplist():
                 channel_title=channel_title,
                 made_for_kids=made_for_kids
             )
+
             if not made_for_kids:
                 counter += 1
+
+            next_page_token = playlist_items.get('nextPageToken')
+            if not next_page_token:
+                break
 
 
 def update_channel_toplist():

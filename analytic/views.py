@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import CreateView
@@ -34,15 +35,24 @@ def video(request):
 class TopListVideos(View):
     def get(self, request):
         videos_data = GetTopListVideos().get_world_videos_data()
-        return render(request, 'toplist-videos.html', {'videos_data': videos_data})
+        return render(request, 'toplist-videos.html', {'videos_data': videos_data, 'for_kids': True})
+
+    def post(self, request):
+        for_kids = request.POST.get('for_kids')
+        if for_kids:
+            for_kids = True
+        else:
+            for_kids = False
+        videos_data = GetTopListVideos().get_world_videos_data(for_kids=for_kids)
+        return render(request, 'toplist-videos.html', {'videos_data': videos_data, 'for_kids': for_kids})
 
 
 class TopListChannels(View):
     def get(self, request):
         sort = request.GET.get('sort', 'subscribers')
         if sort == 'subscribers':
-            channels_data = GetTopListChannels().get_world_channels_data_by_subscribers()
+            channels_data = GetTopListChannels().get_channels_data_by_subscribers()
         elif sort == 'views':
-            channels_data = GetTopListChannels().get_world_channels_data_by_views()
+            channels_data = GetTopListChannels().get_channels_data_by_views()
         return render(request, 'toplist-channels.html', {'channels_data': channels_data})
 
