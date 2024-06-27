@@ -71,16 +71,24 @@ def update_video_toplist():
         playlist_items = api_request.playlistItems().list(
             part='snippet',
             playlistId=playlist_id,
-            maxResults=50,
+            maxResults=25,
             pageToken=next_page_token
         ).execute()
 
         for item in playlist_items['items']:
             video_id = item['snippet']['resourceId']['videoId']
+
+            # Проверяем, существует ли видео с таким же video_id в базе данных
+            if ListTopVideos.objects.filter(video_id=video_id).exists():
+                continue
+
             video_request_data = api_request.videos().list(
                 part='snippet,contentDetails,statistics,status',
                 id=video_id
             ).execute()
+
+            if not video_request_data['items']:
+                continue
 
             channel_id = video_request_data['items'][0]['snippet']['channelId']
             title = video_request_data['items'][0]['snippet']['title']
@@ -97,6 +105,7 @@ def update_video_toplist():
             channel_icon = channel_request_data['items'][0]['snippet']['thumbnails']['default']['url']
 
             ListTopVideos.objects.create(
+                video_id=video_id,  # Добавляем video_id для последующей проверки
                 title=title,
                 thumbnail=thumbnail,
                 view_count=view_count,
@@ -109,9 +118,9 @@ def update_video_toplist():
             if not made_for_kids:
                 counter += 1
 
-            next_page_token = playlist_items.get('nextPageToken')
-            if not next_page_token:
-                break
+        next_page_token = playlist_items.get('nextPageToken')
+        if not next_page_token:
+            break
 
 
 def update_channel_toplist():
@@ -123,9 +132,8 @@ def update_channel_toplist():
         request_data = api_request.channels().list(
             part='snippet,statistics,status',
             id=top_channel.channel_id
-        )
-        response = request_data.execute()
-        channel_data = response['items'][0] if 'items' in response else None
+        ).execute()
+        channel_data = request_data['items'][0] if 'items' in request_data else None
         if channel_data:
             top_channel.title = channel_data['snippet']['title']
             top_channel.thumbnails = channel_data['snippet']['thumbnails']['default']['url']
@@ -133,4 +141,8 @@ def update_channel_toplist():
             top_channel.subscriber_count = int(channel_data['statistics']['subscriberCount'])
             top_channel.video_count = int(channel_data['statistics']['videoCount'])
             top_channel.country = channel_data['snippet'].get('country', '')
+            if 'status' in channel_data and 'madeForKids' in channel_data['status']:
+                top_channel.made_for_kids = channel_data['status']['madeForKids']
+            else:
+                top_channel.made_for_kids = True
             top_channel.save()

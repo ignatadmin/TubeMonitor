@@ -2,13 +2,14 @@ from django.db import models
 
 
 class ListTopVideos(models.Model):
+    video_id = models.CharField(max_length=24, default=None, null=True, verbose_name="айди канала")
     title = models.CharField(max_length=100, default=None, null=True, verbose_name="название")
     thumbnail = models.CharField( max_length=200, default=None, null=True, verbose_name="миниатюра")
     view_count = models.BigIntegerField(default=None, null=True, verbose_name="число просмотров")
     channel_icon = models.CharField(max_length=200, default=None, null=True, verbose_name="иконка канала")
     channel_id = models.CharField(max_length=24, default=None, null=True, verbose_name="айди канала")
     channel_title = models.CharField(max_length=100, default=None, null=True, verbose_name="название канала")
-    made_for_kids = models.BooleanField(default=False, null=True, verbose_name="контент для детей")
+    made_for_kids = models.BooleanField(default=None, null=True, verbose_name="контент для детей")
 
     def __str__(self):
         return f'{self.pk} - {self.title} - {self.view_count} - {self.made_for_kids}'
@@ -26,6 +27,7 @@ class ListTopChannels(models.Model):
     subscriber_count = models.BigIntegerField(default=None, null=True, verbose_name="число подписчиков")
     video_count = models.BigIntegerField(default=None, null=True, verbose_name="число видео")
     country = models.CharField(max_length=100, default=None, null=True, verbose_name="страна")
+    made_for_kids = models.BooleanField(default=None, null=True, verbose_name="контент для детей")
 
     def __str__(self):
         return f'{self.pk} - {self.title} - {self.channel_id}'

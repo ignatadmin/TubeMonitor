@@ -41,15 +41,51 @@
             <div class="my-border">
                 <h1 class="container text-center">Фильтры</h1>
                 <hr>
-                <div>
-                    <input class="my-size" type="checkbox" id="only_RU" name="only_RU" value="only_RU">
-                    <label class="my-text-size" for="finRot">&nbsp; только RU</label>
-                </div>
+                <form id="filter-form-ru" method="post" action="">
+                    {% csrf_token %}
+                    {% if only_ru %}
+                    <input class="my-size" type="checkbox" id="only_ru" name="only_ru" value="only_ru" checked
+                           onchange="ruSubmitFormWithCurrentURL()">
+                    <label class="my-text-size" for="only_ru2">&nbsp; только RU</label>
+                    {% else %}
+                    <input class="my-size" type="checkbox" id="only_ru" name="only_ru" value="only_ru"
+                           onchange="ruSubmitFormWithCurrentURL()">
+                    <label class="my-text-size" for="only_ru2">&nbsp; только RU</label>
+                    {% endif %}
+                </form>
                 <br>
-                <div>
-                    <input class="my-size" type="checkbox" id="for_kids" name="for_kids" value="for_kids" checked>
-                    <label class="my-text-size" for="finRot">&nbsp; для детей</label>
-                </div>
+                <form id="filter-form" method="post" action="">
+                    {% csrf_token %}
+                    {% if for_kids %}
+                    <input class="my-size" type="checkbox" id="for_kids" name="for_kids" value="for_kids" checked
+                           onchange="submitFormWithCurrentURL()">
+                    <label class="my-text-size" for="for_kids">&nbsp; для детей</label>
+                    {% else %}
+                    <input class="my-size" type="checkbox" id="for_kids" name="for_kids" value="for_kids"
+                           onchange="submitFormWithCurrentURL()">
+                    <label class="my-text-size" for="for_kids">&nbsp; для детей</label>
+                    {% endif %}
+                </form>
+                <script>
+                    function ruSubmitFormWithCurrentURL() {
+                        var form = document.getElementById('filter-form-ru');
+                        var currentURL = window.location.href;
+
+                        // Обновляем action формы на текущий URL
+                        form.action = currentURL;
+                        form.submit();
+                    }
+                </script>
+                <script>
+                    function submitFormWithCurrentURL() {
+                        var form = document.getElementById('filter-form');
+                        var currentURL = window.location.href;
+
+                        // Обновляем action формы на текущий URL
+                        form.action = currentURL;
+                        form.submit();
+                    }
+                </script>
             </div>
         </div>
         <div class="right-content">

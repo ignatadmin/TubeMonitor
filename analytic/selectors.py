@@ -13,10 +13,20 @@ class GetTopListVideos():
 
 
 class GetTopListChannels():
-    def get_channels_data_by_subscribers(self):
-        channels_data = ListTopChannels.objects.all().order_by('-subscriber_count')[:100]
+    def get_channels_data_by_subscribers(self, for_kids=True, only_ru=False):
+        if for_kids or not only_ru:
+            channels_data = ListTopChannels.objects.all().order_by('-subscriber_count')[:100]
+        if not for_kids:
+            channels_data = ListTopChannels.objects.filter(made_for_kids=False).order_by('-subscriber_count')[:100]
+        if only_ru:
+            channels_data = ListTopChannels.objects.filter(country='RU').order_by('-subscriber_count')[:100]
         return channels_data
 
-    def get_channels_data_by_views(self):
-        channels_data = ListTopChannels.objects.all().order_by('-view_count')[:100]
+    def get_channels_data_by_views(self, for_kids=True, only_ru=False):
+        if for_kids or not only_ru:
+            channels_data = ListTopChannels.objects.all().order_by('-view_count')[:100]
+        if not for_kids:
+            channels_data = ListTopChannels.objects.filter(made_for_kids=False).order_by('-view_count')[:100]
+        if only_ru:
+            channels_data = ListTopChannels.objects.filter(country='RU').order_by('-view_count')[:100]
         return channels_data

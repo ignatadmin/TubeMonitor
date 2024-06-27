@@ -54,5 +54,23 @@ class TopListChannels(View):
             channels_data = GetTopListChannels().get_channels_data_by_subscribers()
         elif sort == 'views':
             channels_data = GetTopListChannels().get_channels_data_by_views()
-        return render(request, 'toplist-channels.html', {'channels_data': channels_data})
+        return render(request, 'toplist-channels.html', {'channels_data': channels_data, 'for_kids': True})
 
+    def post(self, request):
+        sort = request.GET.get('sort', 'subscribers')
+        for_kids = request.POST.get('for_kids')
+        only_ru = request.POST.get('only_ru')
+        if for_kids:
+            for_kids = True
+        else:
+            for_kids = False
+        if only_ru:
+            only_ru = True
+        else:
+            only_ru = False
+        if sort == 'subscribers':
+            channels_data = GetTopListChannels().get_channels_data_by_subscribers(for_kids=for_kids, only_ru=only_ru)
+        elif sort == 'views':
+            channels_data = GetTopListChannels().get_channels_data_by_views(for_kids=for_kids, only_ru=only_ru)
+        return render(request, 'toplist-channels.html',
+                      {'channels_data': channels_data, 'for_kids': for_kids, 'only_ru': only_ru, })
