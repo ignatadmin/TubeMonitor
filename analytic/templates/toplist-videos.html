@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
 
 {% block title %}
 топ 100 популярных видео на YouTube
@@ -23,13 +24,13 @@
                 <form id="filter-form" method="post" action="{% url 'toplist_videos' %}">
                     {% csrf_token %}
                     {% if for_kids %}
-                        <input class="my-size" type="checkbox" id="for_kids" name="for_kids" value="for_kids" checked
-                               onchange="document.getElementById('filter-form').submit()">
-                        <label class="my-text-size" for="for_kids">&nbsp; для детей</label>
+                    <input class="my-size" type="checkbox" id="for_kids" name="for_kids" value="for_kids" checked
+                           onchange="document.getElementById('filter-form').submit()">
+                    <label class="my-text-size" for="for_kids">&nbsp; для детей</label>
                     {% else %}
-                        <input class="my-size" type="checkbox" id="for_kids" name="for_kids" value="for_kids"
-                               onchange="document.getElementById('filter-form').submit()">
-                        <label class="my-text-size" for="for_kids">&nbsp; для детей</label>
+                    <input class="my-size" type="checkbox" id="for_kids" name="for_kids" value="for_kids"
+                           onchange="document.getElementById('filter-form').submit()">
+                    <label class="my-text-size" for="for_kids">&nbsp; для детей</label>
                     {% endif %}
                 </form>
             </div>
@@ -68,7 +69,7 @@
                             <td>{{ forloop.counter }}</td>
                             <td class="video_preview"><img src="{{ video.thumbnail }}" width="80" height="60"></td>
                             <td class="my-leftside">{{ video.title|truncatechars:70 }}</td>
-                            <td>{{ video.view_count }}</td>
+                            <td>{{ video.view_count|format_count }}</td>
                             <td><img src="{{ video.channel_icon }}" width="40" height="40"></td>
                             <td class="my-leftside">{{ video.channel_title|truncatechars:30 }}</td>
                         </tr>

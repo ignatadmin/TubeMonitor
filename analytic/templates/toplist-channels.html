@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
+
 
 {% block title %}
 топ 100 YouTube каналов по подписчикам
@@ -116,9 +118,9 @@
                             <td>{{ forloop.counter }}</td>
                             <td><img src="{{ channel.channel_icon }}" width="40" height="40"></td>
                             <td class="my-leftside">{{ channel.title }}</td>
-                            <td>{{ channel.subscriber_count }}</td>
-                            <td>{{ channel.view_count }}</td>
-                            <td>{{ channel.video_count }}</td>
+                            <td>{{ channel.subscriber_count|format_count }}</td>
+                            <td>{{ channel.view_count|format_count }}</td>
+                            <td>{{ channel.video_count|format_count }}</td>
                         </tr>
                         {% empty %}
                         <tr>
