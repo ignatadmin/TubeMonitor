@@ -3,27 +3,27 @@
 
 
 {% block title %}
-топ 100 YouTube каналов по подписчикам
+Топ 100 YouTube каналов по подписчикам - TubeMonitor
 {% endblock %}
 
 {% block body %}
 
 <div style="margin-left: 10%; margin-right: 10%;">
-    <h1 class="mt-5 mb-4" style="text-align:center">топ 100 YouTube каналов по подписчикам</h1>
+    <h1 class="mt-5 mb-4" style="text-align:center">Топ 100 YouTube каналов по подписчикам</h1>
     <div class="my-container">
         <div class="left-content">
             <div class="my-border">
                 <h1 class="container text-center">Топы</h1>
                 <hr>
-                <a class="iksweb" href="/toplist/videos" title="топ видео"> топ видео &nbsp; &nbsp; </a>
-                <a class="iksweb" href="/toplist/channels/" title="топ каналов">топ каналов</a>
+                <a class="iksweb" href="/toplist/videos" title="топ видео"> Топ Видео &nbsp; &nbsp; </a>
+                <a class="iksweb" href="/toplist/channels/" title="топ каналов">Топ Каналов</a>
             </div>
             <br>
             <div class="my-border">
                 <h1 class="container text-center">Сортировка</h1>
                 <hr>
-                <a class="iksweb" href="/toplist/channels/?sort=views" title="топ видео"> просмотры &nbsp; &nbsp; </a>
-                <a class="iksweb" href="/toplist/channels/?sort=subscribers" title="топ каналов">подписчики</a>
+                <a class="iksweb" href="/toplist/channels/?sort=views" title="топ видео"> Просмотры &nbsp; &nbsp; </a>
+                <a class="iksweb" href="/toplist/channels/?sort=subscribers" title="топ каналов">Подписчики</a>
             </div>
             <script>
                 var currentPath = window.location.pathname;
@@ -72,8 +72,6 @@
                     function ruSubmitFormWithCurrentURL() {
                         var form = document.getElementById('filter-form-ru');
                         var currentURL = window.location.href;
-
-                        // Обновляем action формы на текущий URL
                         form.action = currentURL;
                         form.submit();
                     }
@@ -82,8 +80,6 @@
                     function submitFormWithCurrentURL() {
                         var form = document.getElementById('filter-form');
                         var currentURL = window.location.href;
-
-                        // Обновляем action формы на текущий URL
                         form.action = currentURL;
                         form.submit();
                     }
@@ -106,10 +102,10 @@
                         <tr>
                             <th>Топ</th>
                             <th></th>
-                            <th>канал</th>
-                            <th>подписчиков</th>
-                            <th>Просмотров</th>
-                            <th>видеороликов</th>
+                            <th>Канал</th>
+                            <th>Подписчики</th>
+                            <th>Просмотры</th>
+                            <th>Пидеоролики</th>
                         </tr>
                         </thead>
                         <tbody>

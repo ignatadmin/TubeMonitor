@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
+{% load custom_filters %}
 
 {% block title %}
-аналитика канала
+Информация о канале - TubeMonitor
 {% endblock %}
 
 {% block body %}
@@ -32,9 +33,9 @@
         <hr>
         <div class="container-my-down">
             <div style=" margin: 50px auto; margin-left: 1%;">
-                <h1>подписчиков: {{ channel_data.statistics.subscriberCount }}</h1>
-                <h1>просмотров: {{ channel_data.statistics.viewCount }}</h1>
-                <h1>видеороликов: {{ channel_data.statistics.videoCount }}</h1>
+                <h1>подписчиков: {{ channel_data.statistics.subscriberCount|format_count }}</h1>
+                <h1>просмотров: {{ channel_data.statistics.viewCount|format_count }}</h1>
+                <h1>видеороликов: {{ channel_data.statistics.videoCount|format_count }}</h1>
             </div>
             <div style="margin-left: 20%; margin-right: 5%;">
                 <h3 class="text-center">описание</h3>
