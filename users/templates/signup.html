@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Регистрация
+{% endblock %}
+
+{% block body %}
+<div style="margin-left: 30%; margin-right: 20%;">
+    <div style="font-size: 200%;">
+        <form method="POST" novalidate>
+            {% csrf_token %}
+            </br>
+            <h1>Регистрация</h1>
+            </br>
+            {% for field in form %}
+            <p>
+                {% if field.errors %}
+            <ul class="errorlist">
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {{ field.label_tag }} {{ field }}
+            </p>
+            {% endfor %}
+            <input type="submit" value="Зарегистрироваться"/>
+        </form>
+    </div>
+</div>
+{% endblock %}

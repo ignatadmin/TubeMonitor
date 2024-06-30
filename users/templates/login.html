@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}
+авторизация
+{% endblock %}
+
+
+{% block body%}
+<div style="margin-left: 25%; margin-right: 5%;">
+    <div style="font-size: 250%;">
+        <br/>
+        <br/>
+        <h1>войти</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit"> Войти</button>
+        </form>
+        <br/>
+    </div>
+</div>
+<br/>
+<div>
+    <div style="margin-left: 65%">
+        <h1>Нет аккаунта? <a href="http://127.0.0.1:8000/signup/">
+            <button>регистрация</button>
+        </a></h1>
+    </div>
+</div>
+<br/>
+{% endblock %}}
