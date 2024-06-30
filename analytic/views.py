@@ -44,16 +44,24 @@ def video(request):
 
 class TopListVideos(View):
     def get(self, request):
-        videos_data = GetTopListVideos().get_world_videos_data()
+        if request.user.is_active:
+            length_list = 100
+        else:
+            length_list = 15
+        videos_data = GetTopListVideos().get_world_videos_data(length_list=length_list)
         return render(request, 'toplist-videos.html', {'videos_data': videos_data, 'for_kids': True})
 
     def post(self, request):
         for_kids = request.POST.get('for_kids')
+        if request.user.is_active:
+            length_list = 100
+        else:
+            length_list = 15
         if for_kids:
             for_kids = True
         else:
             for_kids = False
-        videos_data = GetTopListVideos().get_world_videos_data(for_kids=for_kids)
+        videos_data = GetTopListVideos().get_world_videos_data(for_kids=for_kids,length_list=length_list)
         return render(request, 'toplist-videos.html', {'videos_data': videos_data, 'for_kids': for_kids})
 
 
