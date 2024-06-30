@@ -5,15 +5,23 @@ from django.urls import reverse_lazy
 from django.shortcuts import render, redirect
 from django.contrib.auth import logout as django_logout
 
+from .models import Profile
+from .tg_bot import bot
+
 
 def signup(request):
     if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
-            user = form.save()
+            user = form.save(commit=False)
+            user.is_active = False
             user.save()
 
-            return redirect('index')
+            profile, created = Profile.objects.get_or_create(user=user)
+
+            name_bot = 'qsxdr2bot'
+            activation_url = f"https://t.me/{name_bot}?start={profile.telegram_activation_code}"
+            return render(request, template_name="confirm_tg.html", context={"activation_url": activation_url})
     else:
         form = UserCreationForm()
     return render(request, template_name="signup.html", context={"form": form})

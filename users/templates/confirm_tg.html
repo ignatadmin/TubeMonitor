@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}
+авторизация
+{% endblock %}
+
+
+{% block body%}
+<div style="margin-left: 20%; margin-right: 20%;">
+    <div style="font-size: 250%;">
+        <br/>
+        <div class="my-border text-center">
+            <h1>Подключите Telegram</h1>
+            <h1>Активируйте ваш аккаунт через телеграм: <a href="{{ activation_url }}">
+            <button>активировать</button></a></h1>
+            <br/>
+            <h1>Эту страницу можно закрыть.</h1>
+        </div>
+    </div>
+</div>
+{% endblock %}}
