@@ -33,7 +33,7 @@
                     <a class="nav-link active my-border-lite my-btn-space" href="/login">Войти</a>
                 </li>
                 {% endif %}
-                {% if not request.user.is_authenticated %}
+                {% if request.user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link active my-border-lite my-btn-space" href="/logout">Выйти</a>
                 </li>

@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import CreateView
@@ -10,26 +10,36 @@ class Index(CreateView):
     def post(self, request, *args, **kwargs):
         url = request.POST.get('url')
         parsed_url = urlparse(url)
-        request.session['parsed_url'] = parsed_url.geturl()
+        response = HttpResponseRedirect('/')
+        response.set_cookie('parsed_url', parsed_url.geturl())
+
         if parsed_url.netloc == "youtu.be" or parsed_url.path.startswith("/watch"):
-            return redirect('video')
+            response['Location'] = 'video'
         else:
-            return redirect('channel')
+            response['Location'] = 'channel'
+
+        return response
 
     def get(self, request, *args, **kwargs):
         return render(request, 'index.html')
 
 
 def channel(request):
-    parsed_url_str = request.session.get('parsed_url')
-    channel_data = get_channel_data(parsed_url_str)
-    return render(request, 'channel.html', {'channel_data': channel_data})
+    parsed_url_str = request.COOKIES.get('parsed_url')
+    if parsed_url_str:
+        channel_data = get_channel_data(parsed_url_str)
+        return render(request, 'channel.html', {'channel_data': channel_data})
+    else:
+        return redirect('/')
 
 
 def video(request):
-    parsed_url_str = request.session.get('parsed_url')
-    video_data, channel_data = get_video_data(parsed_url_str)
-    return render(request, 'video.html', {'video_data': video_data, 'channel_data': channel_data})
+    parsed_url_str = request.COOKIES.get('parsed_url')
+    if parsed_url_str:
+        video_data, channel_data = get_video_data(parsed_url_str)
+        return render(request, 'video.html', {'video_data': video_data, 'channel_data': channel_data})
+    else:
+        return redirect('/')
 
 
 class TopListVideos(View):

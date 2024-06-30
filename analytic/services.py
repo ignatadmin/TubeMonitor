@@ -105,7 +105,7 @@ def update_video_toplist():
             channel_icon = channel_request_data['items'][0]['snippet']['thumbnails']['default']['url']
 
             ListTopVideos.objects.create(
-                video_id=video_id,  # Добавляем video_id для последующей проверки
+                video_id=video_id,
                 title=title,
                 thumbnail=thumbnail,
                 view_count=view_count,
@@ -136,6 +136,7 @@ def update_channel_toplist():
         channel_data = request_data['items'][0] if 'items' in request_data else None
         if channel_data:
             top_channel.title = channel_data['snippet']['title']
+            top_channel.channel_icon = channel_data['snippet']['thumbnails']['default']['url']
             top_channel.thumbnails = channel_data['snippet']['thumbnails']['default']['url']
             top_channel.view_count = int(channel_data['statistics']['viewCount'])
             top_channel.subscriber_count = int(channel_data['statistics']['subscriberCount'])
