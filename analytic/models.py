@@ -30,7 +30,7 @@ class ListTopChannels(models.Model):
     made_for_kids = models.BooleanField(default=None, null=True, verbose_name="контент для детей")
 
     def __str__(self):
-        return f'{self.pk} - {self.title} - {self.channel_id}'
+        return f'{self.pk} - {self.title} - {self.channel_id} - {self.country} - {self.made_for_kids}'
 
     class Meta:
         verbose_name = "список топ каналов"

@@ -1,9 +1,10 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render
 from django.views import View
 from django.views.generic import CreateView
-from .services import *
-from .selectors import *
+from urllib.parse import urlparse
+from .services import get_channel_data, get_video_data
+from .selectors import GetTopListVideos, GetTopListChannels
 
 
 class Index(CreateView):
@@ -24,71 +25,65 @@ class Index(CreateView):
         return render(request, 'index.html')
 
 
-def channel(request):
+def channel_data(request):
+    """ По URL получает данные канала из YouTube API, и отображает их"""
     parsed_url_str = request.COOKIES.get('parsed_url')
-    if parsed_url_str:
-        channel_data = get_channel_data(parsed_url_str)
-        return render(request, 'channel.html', {'channel_data': channel_data})
-    else:
-        return redirect('/')
+    channel_data = get_channel_data(parsed_url_str)
+    return render(request,'channel.html', {'channel_data': channel_data})
 
 
-def video(request):
+def video_data(request):
+    """ По URL получает данные видео из YouTube API, и отображает их"""
     parsed_url_str = request.COOKIES.get('parsed_url')
-    if parsed_url_str:
-        video_data, channel_data = get_video_data(parsed_url_str)
-        return render(request, 'video.html', {'video_data': video_data, 'channel_data': channel_data})
-    else:
-        return redirect('/')
+    video_data, channel_data = get_video_data(parsed_url_str)
+    return render(request,
+                  'video.html',
+                  {'video_data': video_data, 'channel_data': channel_data})
 
 
 class TopListVideos(View):
+    """ Представление для отображения списка топовых видео """
+    def get_videos_data(self, request, for_kids: bool = True):
+        length_list = 100 if request.user.is_active else 15
+        try:
+            videos_data = GetTopListVideos().get_videos_data(for_kids=for_kids, length_list=length_list)
+        except Exception as e:
+            return HttpResponse(f"Error getting top videos data: {e}", status=500)
+        return render(request,
+                      'toplist-videos.html',
+                      {'videos_data': videos_data, 'for_kids': for_kids})
+
     def get(self, request):
-        if request.user.is_active:
-            length_list = 100
-        else:
-            length_list = 15
-        videos_data = GetTopListVideos().get_world_videos_data(length_list=length_list)
-        return render(request, 'toplist-videos.html', {'videos_data': videos_data, 'for_kids': True})
+        return self.get_videos_data(request)
 
     def post(self, request):
-        for_kids = request.POST.get('for_kids')
-        if request.user.is_active:
-            length_list = 100
-        else:
-            length_list = 15
-        if for_kids:
-            for_kids = True
-        else:
-            for_kids = False
-        videos_data = GetTopListVideos().get_world_videos_data(for_kids=for_kids,length_list=length_list)
-        return render(request, 'toplist-videos.html', {'videos_data': videos_data, 'for_kids': for_kids})
+        for_kids = request.POST.get('for_kids') == 'true'
+        return self.get_videos_data(request, for_kids)
 
 
 class TopListChannels(View):
+    """ Представление для отображения списка топовых каналов """
+    def get_channels_data(self, request, for_kids: bool, only_ru: bool, sort: str) -> HttpResponse:
+        length_list = 100 if request.user.is_active else 15
+        channels_data_func = {
+            'subscribers': GetTopListChannels().get_channels_data_by_subscribers,
+            'views': GetTopListChannels().get_channels_data_by_views
+        }.get(sort, GetTopListChannels().get_channels_data_by_subscribers)
+
+        try:
+            channels_data = channels_data_func(length_list=length_list, for_kids=for_kids, only_ru=only_ru)
+        except Exception as e:
+            return HttpResponse(f"Error getting top channels data: {e}", status=500)
+        return render(request,
+                      'toplist-channels.html',
+                      {'channels_data': channels_data, 'for_kids': for_kids, 'only_ru': only_ru})
+
     def get(self, request):
         sort = request.GET.get('sort', 'subscribers')
-        if sort == 'subscribers':
-            channels_data = GetTopListChannels().get_channels_data_by_subscribers()
-        elif sort == 'views':
-            channels_data = GetTopListChannels().get_channels_data_by_views()
-        return render(request, 'toplist-channels.html', {'channels_data': channels_data, 'for_kids': True})
+        return self.get_channels_data(request, for_kids=True, only_ru=False, sort=sort)
 
     def post(self, request):
         sort = request.GET.get('sort', 'subscribers')
-        for_kids = request.POST.get('for_kids')
-        only_ru = request.POST.get('only_ru')
-        if for_kids:
-            for_kids = True
-        else:
-            for_kids = False
-        if only_ru:
-            only_ru = True
-        else:
-            only_ru = False
-        if sort == 'subscribers':
-            channels_data = GetTopListChannels().get_channels_data_by_subscribers(for_kids=for_kids, only_ru=only_ru)
-        elif sort == 'views':
-            channels_data = GetTopListChannels().get_channels_data_by_views(for_kids=for_kids, only_ru=only_ru)
-        return render(request, 'toplist-channels.html',
-                      {'channels_data': channels_data, 'for_kids': for_kids, 'only_ru': only_ru, })
+        for_kids = request.POST.get('for_kids') == 'true'
+        only_ru = request.POST.get('only_ru') == 'true'
+        return self.get_channels_data(request, for_kids=for_kids, only_ru=only_ru, sort=sort)
