@@ -25,7 +25,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'analytic',
     'users',
-    'rest_framework',
     'debug_toolbar',
 ]
 
@@ -59,7 +58,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'tubemonitor.wsgi.application'
-
 
 DATABASES = {
     'default': {
@@ -120,3 +118,13 @@ CACHES = {
         "LOCATION": os.path.join(BASE_DIR, 'tubemonitor_cache'),
     }
 }
+
+REDIS_HOST = os.environ.get('REDIS_HOST')
+REDIS_PORT = os.environ.get('REDIS_PORT')
+
+CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
