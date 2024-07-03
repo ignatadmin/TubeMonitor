@@ -1,3 +1,4 @@
+import logging
 from telebot.async_telebot import AsyncTeleBot
 from django.conf import settings
 from .models import Profile
@@ -7,9 +8,11 @@ from asgiref.sync import sync_to_async
 import asyncio
 import threading
 
-bot = AsyncTeleBot(settings.API_TOKEN)
-print("бот запущен")
 
+bot = AsyncTeleBot(settings.API_TOKEN)
+
+logging.basicConfig(level=logging.INFO)
+logging.info('Бот запущен')
 
 @bot.message_handler(commands=['start'])
 async def process_start_command(message):
@@ -35,9 +38,11 @@ async def process_start_command(message):
     except Exception as e:
         print("Error in process_start_command:", e)
 
+
 def start_bot():
     asyncio.run(bot.polling())
 
 
-bot_thread = threading.Thread(target=start_bot, daemon=True)
-bot_thread.start()
+if __name__ == "__main__":
+    bot_thread = threading.Thread(target=start_bot, daemon=True)
+    bot_thread.start()
