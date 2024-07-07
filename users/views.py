@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import logout as django_logout
 
 from .models import Profile
-from .tg_bot import bot
+from .bot import bot
 
 
 def signup(request):
@@ -19,7 +19,7 @@ def signup(request):
 
             profile, created = Profile.objects.get_or_create(user=user)
 
-            name_bot = 'qsxdr2bot'
+            name_bot = 'tubemonitor_Bot'
             activation_url = f"https://t.me/{name_bot}?start={profile.telegram_activation_code}"
             return render(request, template_name="confirm_tg.html", context={"activation_url": activation_url})
     else:

@@ -90,13 +90,9 @@ class TopListChannels(View):
         sort = request.GET.get('sort', 'subscribers')
         for_kids = request.POST.get('for_kids')
         only_ru = request.POST.get('only_ru')
-        if for_kids:
-            for_kids = True
-        else:
-            for_kids = False
+        for_kids = True if for_kids is not None else False
+        only_ru = True if only_ru is not None else False
         if only_ru:
-            only_ru = True
             for_kids = True
-        else:
-            only_ru = False
+
         return self.get_channels_data(request, for_kids=for_kids, only_ru=only_ru, sort=sort)

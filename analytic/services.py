@@ -30,7 +30,7 @@ def get_channel_data(parsed_url_str):
     try:
         parsed_url = urlparse(parsed_url_str)
         path = parsed_url.path.strip('/')
-        key = settings.API_KEY
+        key = settings.YOUTUBE_API_KEY
         api_request = build('youtube', 'v3', developerKey=key)
 
         if path.startswith('channel/'):
@@ -78,7 +78,7 @@ def get_video_data(parsed_url_str):
     try:
         parsed_url = urlparse(parsed_url_str)
         video_id = extract_video_id(parsed_url)
-        key = settings.API_KEY
+        key = settings.YOUTUBE_API_KEY
         api_request = build('youtube', 'v3', developerKey=key)
 
         video_response = fetch_video_data(api_request, video_id)
@@ -142,9 +142,9 @@ def update_video_toplist():
     Запрашивает данные у YouTube API и сохраняет их в базу данных
     """
     try:
-        key = settings.API_KEY
+        key = settings.YOUTUBE_API_KEY
         api_request = build('youtube', 'v3', developerKey=key)
-        TOP_VIDEO_PLAYLIST = 'PL11E57E1166929B60'
+        video_playlist = settings.TOP_VIDEO_PLAYLIST
         next_page_token = None
         counter = 0
         ListTopVideos.objects.all().delete()
@@ -152,7 +152,7 @@ def update_video_toplist():
         while counter < 100:
             playlist_response = api_request.playlistItems().list(
                 part='snippet',
-                playlistId=TOP_VIDEO_PLAYLIST,
+                playlistId=video_playlist,
                 maxResults=25,
                 pageToken=next_page_token
             ).execute()
@@ -195,7 +195,7 @@ def update_channel_data(api_request, top_channel):
 def update_channel_toplist():
     """ Обновляет список топовых каналов, запрашивая данные у YouTube API и сохраняет их в базу данных """
     try:
-        key = settings.API_KEY
+        key = settings.YOUTUBE_API_KEY
         api_request = build('youtube', 'v3', developerKey=key)
         queryset = ListTopChannels.objects.all()
 

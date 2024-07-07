@@ -1,15 +1,17 @@
+import asyncio
+import threading
 import logging
+
 from telebot.async_telebot import AsyncTeleBot
 from django.conf import settings
-from .models import Profile
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 from django.contrib.auth.models import User
 from asgiref.sync import sync_to_async
-import asyncio
-import threading
+
+from .models import Profile
 
 
-bot = AsyncTeleBot(settings.API_TOKEN)
+bot = AsyncTeleBot(settings.TELEGRAM_API_TOKEN)
 
 logging.basicConfig(level=logging.INFO)
 logging.info('Бот запущен')
@@ -35,6 +37,8 @@ async def process_start_command(message):
                     await bot.send_message(message.chat.id, "Аккаунт уже активирован")
             else:
                 await bot.send_message(message.chat.id, "Неверная ссылка активации")
+        else:
+            await bot.send_message(message.chat.id, "Перейдите по ссылке активации")
     except Exception as e:
         print("Error in process_start_command:", e)
 
@@ -43,6 +47,5 @@ def start_bot():
     asyncio.run(bot.polling())
 
 
-if __name__ == "__main__":
-    bot_thread = threading.Thread(target=start_bot, daemon=True)
-    bot_thread.start()
+bot_thread = threading.Thread(target=start_bot, daemon=True)
+bot_thread.start()

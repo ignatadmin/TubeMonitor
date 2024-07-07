@@ -33,5 +33,5 @@ class ListTopChannels(models.Model):
         return f'{self.pk} - {self.title} - {self.channel_id} - {self.country} - {self.made_for_kids}'
 
     class Meta:
-        verbose_name = "список топ каналов"
-        verbose_name_plural = "список топ каналов"
+        verbose_name = "Топ каналов"
+        verbose_name_plural = "Топ каналов"
