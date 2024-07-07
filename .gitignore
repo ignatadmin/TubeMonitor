@@ -15,6 +15,7 @@ venv
 .venv
 .env
 
+local_settings.py
 media
 dist
 sqlite.db
