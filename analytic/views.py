@@ -45,14 +45,15 @@ class TopListVideos(View):
     """ Представление для отображения списка топовых видео """
 
     def get_videos_data(self, request, for_kids: bool = True):
-        length_list = 100 if request.user.is_active else 15
+        auth = request.user.is_active
+        length_list = 100 if auth else 15
         try:
             videos_data = GetTopListVideos().get_videos_data(for_kids=for_kids, length_list=length_list)
         except Exception as e:
             return HttpResponse(f"Error getting top videos data: {e}", status=500)
         return render(request,
                       'toplist-videos.html',
-                      {'videos_data': videos_data, 'for_kids': for_kids})
+                      {'videos_data': videos_data, 'for_kids': for_kids, 'auth': auth})
 
     def get(self, request):
         return self.get_videos_data(request)
@@ -68,7 +69,8 @@ class TopListChannels(View):
     """ Представление для отображения списка топовых каналов """
 
     def get_channels_data(self, request, for_kids: bool, only_ru: bool, sort: str) -> HttpResponse:
-        length_list = 100 if request.user.is_active else 15
+        auth = request.user.is_active
+        length_list = 100 if auth else 15
         channels_data_func = {
             'subscribers': GetTopListChannels().get_channels_data_by_subscribers,
             'views': GetTopListChannels().get_channels_data_by_views
@@ -80,7 +82,7 @@ class TopListChannels(View):
             return HttpResponse(f"Error getting top channels data: {e}", status=500)
         return render(request,
                       'toplist-channels.html',
-                      {'channels_data': channels_data, 'for_kids': for_kids, 'only_ru': only_ru})
+                      {'channels_data': channels_data, 'for_kids': for_kids, 'only_ru': only_ru, 'auth': auth})
 
     def get(self, request):
         sort = request.GET.get('sort', 'subscribers')

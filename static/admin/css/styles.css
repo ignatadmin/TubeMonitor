@@ -176,12 +176,12 @@ button {
     }
     .left-content-down {
 		flex: 1;
-		max-width: 40%;
+		max-width: 50%;
         margin-right: 30px;
     }
     .right-content-down {
         flex: 1;
-        max-width: 60%;
+        max-width: 50%;
         text-align: right;
     }
 

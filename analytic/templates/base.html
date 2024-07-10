@@ -17,11 +17,6 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <a class="navbar-brand" href="/"><img src="{% static 'admin/images/logo.png' %}" alt="TubeMonitor"
                                                   style="width: 150px; height: auto;"></a>
-            <div class="input-group container text-center" style="max-width: 400px;">
-                <input type="search" class="form-control rounded my-dark" placeholder="Поиск" aria-label="Search"
-                       aria-describedby="search-addon"/>
-                <button type="button" class="btn btn-outline-primary" data-mdb-ripple-init>Найти</button>
-            </div>
             <ul class="navbar-nav ms-auto">
                 {% if request.user.is_superuser %}
                 <li class="nav-item">

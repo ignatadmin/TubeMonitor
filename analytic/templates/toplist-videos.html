@@ -80,6 +80,10 @@
                         {% endfor %}
                         </tbody>
                     </table>
+                    {% if not auth %}
+                    <h3 style="text-align: center;"><a href="/login">Войдите</a> чтоб увидеть полный список</h3>
+                    {% endif %}
+                    </table>
                 </div>
             </div>
         </div>

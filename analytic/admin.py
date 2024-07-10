@@ -7,7 +7,7 @@ class ListTopVideosAdmin(admin.ModelAdmin):
 
 
 class ListTopChannelsAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'title', 'channel_id', 'country', 'made_for_kids')
+    list_display = ('pk', 'title', 'channel_id', 'view_count', 'country', 'made_for_kids')
 
 
 admin.site.register(ListTopVideos, ListTopVideosAdmin)

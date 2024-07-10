@@ -5,60 +5,62 @@
 {% endblock %}
 
 {% block body %}
-<div style="margin: 200px auto;">
+<div style="margin: 150px auto;">
     <div style="margin-left: 20%; margin-right: 15%;">
         <div style="font-size: 150%;">
             <div class="container-my">
                 <div style="margin-left: 5%;">
                     <h1 class="container text-center" style="font-weight: 550;">Введи ссылку<br/>на видео или канал</h1>
-                    <form action="{% url 'index' %}" method="post" style="text-align: center; margin-top: 20px;">
+                    <form id="search-form" action="{% url 'index' %}" method="post" style="text-align: center; margin-top: 20px;">
                         {% csrf_token %}
-                        <input type="text" id="url" name="url" style="width: 70%; height: 40px; display: inline-block;">
+                        <div style="position: relative; display: inline-block; width: 70%; height: 40px;">
+                            <input type="text" id="url" name="url" style="width: 100%; height: 100%; display: inline-block;">
+                            <button type="button" id="clear-btn" style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: transparent; border: none; cursor: pointer;">
+                                &#10006;
+                            </button>
+                        </div>
                         <button type="submit" style="display: inline-block;">
-                            <img src="https://cdn4.iconfinder.com/data/icons/ionicons/512/icon-ios7-search-strong-512.png"
+                            <img src="https://icons.veryicon.com/png/o/miscellaneous/ionicons-2/ios-search-strong-1.png"
                                  alt="Search" style="width: 20px; height: 20px;">
                         </button>
                     </form>
-                    <h1 class="text-center"  style="margin: 15px auto;">Примеры:</h1>
-                    <div class="container-my-btn" style=" margin-right: 30%;">
+                    <h1 class="text-center" style="margin: 15px auto;">Примеры:</h1>
+                    <div class="container-my-btn" style="margin-right: 30%;">
                         <div style="margin: 15px auto;" class="text-center">
-                            <a class="mybtn" href="https://www.youtube.com/@MrBeast" title="MrBeast">
+                            <a class="mybtn" href="#" data-url="https://www.youtube.com/@MrBeast" title="MrBeast">
                                 <img src="https://yt3.googleusercontent.com/fxGKYucJAVme-Yz4fsdCroCFCrANWqw0ql4GYuvx8Uq4l_euNJHgE-w9MTkLQA805vWCi-kE0g=s176-c-k-c0x00ffffff-no-rj"
                                      width="40" height="40">
                                 MrBeast
                             </a>
-                            <a class="mybtn" href="https://www.youtube.com/channel/UCbCmjCuTUZos6Inko4u57UQ"
+                            <a class="mybtn" href="#" data-url="https://www.youtube.com/channel/UCbCmjCuTUZos6Inko4u57UQ"
                                title="Cocomelon">
                                 <img src="https://yt3.googleusercontent.com/ytc/AIdro_krpmS9ibNphtb9ouRc-kXIR_EaqXL5wSw_qNY9DgRO7c4=s176-c-k-c0x00ffffff-no-rj"
                                      width="40" height="40">
                                 Cocomelon
                             </a>
-                            <a class="mybtn" href="https://www.youtube.com/@itsmamix" title="Mamix">
+                            <a class="mybtn" href="#" data-url="https://www.youtube.com/@itsmamix" title="Mamix">
                                 <img src="https://yt3.googleusercontent.com/AVtPDxsWmeGmWXs_PZJmwP_f8qeUEJHW95fjaVpJo887C9UEBkRUGIkLDrJnTvM8nf9fPHY_=s176-c-k-c0x00ffffff-no-rj"
                                      width="40" height="40">
                                 It's Mamix
                             </a>
                         </div>
                         <div style="margin: 15px auto;" class="video-preview-home text-center">
-                            <a class="mybtn" href="https://www.youtube.com/watch?v=PfkmHK0UBJM"title="video_button" >
-                                <img src="https://i.ytimg.com/vi/PfkmHK0UBJM/default.jpg"
-                                    width="60" height="40">	&#32; Видео</a>
-                            <a class="mybtn" href="https://www.youtube.com/watch?v=0e3GPea1Tyg" title="video_button">
-                                <img src="https://i.ytimg.com/vi/0e3GPea1Tyg/default.jpg"
-                                    width="60" height="40">	&#32; Видео</a>
-                            <a class="mybtn" href="https://www.youtube.com/watch?v=8TX9zpTqZrc" title="video_button">
-                                <img src="https://i.ytimg.com/vi/8TX9zpTqZrc/default.jpg"
-                                    width="60" height="40">	&#32; Видео</a>
+                            <a class="mybtn" href="#" data-url="https://www.youtube.com/watch?v=PfkmHK0UBJM" title="video_button">
+                                <img src="https://i.ytimg.com/vi/PfkmHK0UBJM/default.jpg" width="60" height="40"> &#32; Видео</a>
+                            <a class="mybtn" href="#" data-url="https://www.youtube.com/watch?v=0e3GPea1Tyg" title="video_button">
+                                <img src="https://i.ytimg.com/vi/0e3GPea1Tyg/default.jpg" width="60" height="40"> &#32; Видео</a>
+                            <a class="mybtn" href="#" data-url="https://www.youtube.com/watch?v=8TX9zpTqZrc" title="video_button">
+                                <img src="https://i.ytimg.com/vi/8TX9zpTqZrc/default.jpg" width="60" height="40"> &#32; Видео</a>
                         </div>
                     </div>
                 </div>
                 <div>
-                    <div class="my-border-lite">
+                    <div class="my-border-lite" style="margin: 50px auto;">
                         <h1 class="container text-center"> Список лучших </h1>
                         <hr>
                         <div style="text-align: center; margin-top: 20px;">
-                            <a class="mybtn " href="/toplist/videos" title="топ видео"> Топ Видео &nbsp; &nbsp; </a>
-                            <a class="mybtn " href="/toplist/channels/" title="топ каналов">Топ Каналов</a>
+                            <a class="mybtn" href="/toplist/videos" title="топ видео"> Топ Видео &nbsp; &nbsp; </a>
+                            <a class="mybtn" href="/toplist/channels/" title="топ каналов">Топ Каналов</a>
                         </div>
                     </div>
                 </div>
@@ -66,4 +68,26 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('search-form');
+        const urlInput = document.getElementById('url');
+        const clearBtn = document.getElementById('clear-btn');
+        const links = document.querySelectorAll('.mybtn[data-url]');
+
+        clearBtn.addEventListener('click', function () {
+            urlInput.value = '';
+        });
+
+        links.forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                urlInput.value = this.getAttribute('data-url');
+                form.submit();
+            });
+        });
+    });
+</script>
+
 {% endblock %}

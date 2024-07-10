@@ -28,3 +28,5 @@ db.sqlite3
 celerybeat-schedule.dir
 celerybeat-schedule.dat
 celerybeat-schedule.bak
+
+tubemonitor_cache

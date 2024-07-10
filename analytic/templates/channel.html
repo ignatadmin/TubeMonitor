@@ -37,7 +37,7 @@
                 <h1>просмотров: {{ channel_data.statistics.viewCount|format_count }}</h1>
                 <h1>видеороликов: {{ channel_data.statistics.videoCount|format_count }}</h1>
             </div>
-            <div style="margin-left: 20%; margin-right: 5%;">
+            <div style="margin-left: 5%; margin-right: 5%;">
                 <h3 class="text-center">описание</h3>
                 <p>{{ channel_data.snippet.description|linebreaks|truncatechars:2000 }}</p>
             </div>

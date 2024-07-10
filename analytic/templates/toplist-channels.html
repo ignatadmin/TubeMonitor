@@ -43,6 +43,20 @@
             <div class="my-border">
                 <h1 class="container text-center">Фильтры</h1>
                 <hr>
+                {% if only_ru %}
+                <form id="filter-form-ru" method="post" action="">
+                    {% csrf_token %}
+                    {% if only_ru %}
+                    <input class="my-size" type="checkbox" id="only_ru" name="only_ru" value="only_ru" checked
+                           onchange="ruSubmitFormWithCurrentURL()">
+                    <label class="my-text-size" for="only_ru2">&nbsp; только RU</label>
+                    {% else %}
+                    <input class="my-size" type="checkbox" id="only_ru" name="only_ru" value="only_ru"
+                           onchange="ruSubmitFormWithCurrentURL()">
+                    <label class="my-text-size" for="only_ru2">&nbsp; только RU</label>
+                    {% endif %}
+                </form>
+                {% else %}
                 <form id="filter-form-ru" method="post" action="">
                     {% csrf_token %}
                     {% if only_ru %}
@@ -68,6 +82,7 @@
                     <label class="my-text-size" for="for_kids">&nbsp; для детей</label>
                     {% endif %}
                 </form>
+                {% endif %}
                 <script>
                     function ruSubmitFormWithCurrentURL() {
                         var form = document.getElementById('filter-form-ru');
@@ -122,9 +137,15 @@
                         <tr>
                             <td colspan="6">Нет доступных результатов</td>
                         </tr>
+                        <tr>
+                            <td colspan="6">Нет доступных результатов</td>
+                        </tr>
                         {% endfor %}
                         </tbody>
                     </table>
+                    {% if not auth %}
+                    <h3 style="text-align: center;"><a href="/login">Войдите</a> чтоб увидеть полный список</h3>
+                    {% endif %}
                 </div>
             </div>
         </div>
