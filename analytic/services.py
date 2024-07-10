@@ -184,7 +184,8 @@ def update_channel_data(api_request, top_channel):
         top_channel.view_count = int(channel_data['statistics']['viewCount'])
         top_channel.subscriber_count = int(channel_data['statistics']['subscriberCount'])
         top_channel.video_count = int(channel_data['statistics']['videoCount'])
-        top_channel.country = channel_data['snippet'].get('country', '')
+        if top_channel.country != 'RU':
+            top_channel.country = channel_data['snippet'].get('country', '')
 
         status = channel_data.get('status', {})
         top_channel.made_for_kids = status.get('madeForKids', True)
