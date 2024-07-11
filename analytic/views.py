@@ -1,8 +1,10 @@
+from urllib.parse import urlparse
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 from django.views.generic import CreateView
-from urllib.parse import urlparse
+
 from .services import get_channel_data, get_video_data
 from .selectors import GetTopListVideos, GetTopListChannels
 
@@ -26,14 +28,18 @@ class Index(CreateView):
 
 
 def channel_data(request):
-    """ По URL получает данные канала из YouTube API, и отображает их"""
+    """
+    По URL получает данные канала из YouTube API, и отображает их
+    """
     parsed_url_str = request.COOKIES.get('parsed_url')
     channel_data = get_channel_data(parsed_url_str)
     return render(request, 'channel.html', {'channel_data': channel_data})
 
 
 def video_data(request):
-    """ По URL получает данные видео из YouTube API, и отображает их"""
+    """
+    По URL получает данные видео из YouTube API, и отображает их
+    """
     parsed_url_str = request.COOKIES.get('parsed_url')
     video_data, channel_data = get_video_data(parsed_url_str)
     return render(request,
@@ -42,8 +48,9 @@ def video_data(request):
 
 
 class TopListVideos(View):
-    """ Представление для отображения списка топовых видео """
-
+    """
+    Представление для отображения списка топовых видео
+    """
     def get_videos_data(self, request, for_kids: bool = True):
         auth = request.user.is_active
         length_list = 100 if auth else 15
@@ -66,8 +73,9 @@ class TopListVideos(View):
 
 
 class TopListChannels(View):
-    """ Представление для отображения списка топовых каналов """
-
+    """
+    Представление для отображения списка топовых каналов
+    """
     def get_channels_data(self, request, for_kids: bool, only_ru: bool, sort: str) -> HttpResponse:
         auth = request.user.is_active
         length_list = 100 if auth else 15

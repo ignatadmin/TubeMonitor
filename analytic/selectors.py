@@ -1,10 +1,13 @@
 from django.core.cache import cache
+
 from .models import ListTopVideos, ListTopChannels
 
 
 class GetTopListVideos:
     def get_videos_data(self, length_list: int, for_kids: bool = True):
-        """ Возвращает данные топовых видео, отфильтрованных по количеству просмотров """
+        """
+        Возвращает данные топовых видео, отфильтрованных по количеству просмотров
+        """
 
         cache_key = f"top_videos_{length_list}_{for_kids}"
         videos_data = cache.get(cache_key)
@@ -22,7 +25,9 @@ class GetTopListVideos:
 
 class GetTopListChannels:
     def get_channels_data(self, length_list: int, sort_by: str, for_kids: bool = True, only_ru: bool = False):
-        """ Возвращает данные топовых каналов, отфильтрованных и отсортированных по указанным параметрам """
+        """
+        Возвращает данные топовых каналов, отфильтрованных и отсортированных по указанным параметрам
+        """
 
         cache_key = f"top_channels_{length_list}_{sort_by}_{for_kids}_{only_ru}"
         channels_data = cache.get(cache_key)

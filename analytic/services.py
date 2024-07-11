@@ -1,6 +1,8 @@
-from googleapiclient.discovery import build
 from urllib.parse import urlparse
+
+from googleapiclient.discovery import build
 from django.conf import settings
+
 from .models import ListTopVideos, ListTopChannels
 
 
@@ -26,7 +28,9 @@ def fetch_channel_data_by_handle(api_request, handle):
 
 
 def get_channel_data(parsed_url_str):
-    """ По URL канала запрашивает данные у YouTube API и возвращает информацию о канале"""
+    """
+    По URL канала запрашивает данные у YouTube API и возвращает информацию о канале
+    """
     try:
         parsed_url = urlparse(parsed_url_str)
         path = parsed_url.path.strip('/')
@@ -74,7 +78,9 @@ def extract_video_id(parsed_url):
 
 
 def get_video_data(parsed_url_str):
-    """ По URL видео запрашивает данные у YouTube API и возвращает информацию о видео"""
+    """
+    По URL видео запрашивает данные у YouTube API и возвращает информацию о видео
+    """
     try:
         parsed_url = urlparse(parsed_url_str)
         video_id = extract_video_id(parsed_url)
@@ -102,7 +108,9 @@ def get_video_data(parsed_url_str):
 
 
 def process_video_item(api_request, item):
-    """ Запрашивает данные о видео из плейлиста у YouTube API и возвращает информацию о видео """
+    """
+    Запрашивает данные о видео из плейлиста у YouTube API и возвращает информацию о видео
+    """
     video_id = item['snippet']['resourceId']['videoId']
 
     if ListTopVideos.objects.filter(video_id=video_id).exists():
@@ -173,7 +181,9 @@ def update_video_toplist():
 
 
 def update_channel_data(api_request, top_channel):
-    """ Обновляет данные канала в базе данных, запрашивая их у YouTube API """
+    """
+    Обновляет данные канала в базе данных, запрашивая их у YouTube API
+    """
     request_data = fetch_channel_data_by_id(api_request, top_channel.channel_id)
     channel_data = request_data['items'][0] if 'items' in request_data else None
 
@@ -194,7 +204,9 @@ def update_channel_data(api_request, top_channel):
 
 
 def update_channel_toplist():
-    """ Обновляет список топовых каналов, запрашивая данные у YouTube API и сохраняет их в базу данных """
+    """
+    Обновляет список топовых каналов, запрашивая данные у YouTube API и сохраняет их в базу данных
+    """
     try:
         key = settings.YOUTUBE_API_KEY
         api_request = build('youtube', 'v3', developerKey=key)

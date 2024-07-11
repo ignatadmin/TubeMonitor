@@ -1,7 +1,7 @@
-import asyncio
 import threading
 import logging
 
+import asyncio
 from telebot.async_telebot import AsyncTeleBot
 from django.conf import settings
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton

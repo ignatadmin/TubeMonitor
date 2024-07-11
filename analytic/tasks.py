@@ -1,4 +1,5 @@
 import logging
+
 from tubemonitor.celery import app
 from .services import update_channel_toplist, update_video_toplist
 
