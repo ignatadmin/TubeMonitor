@@ -1,8 +1,9 @@
-import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import uuid
+
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile', null=True)
@@ -13,8 +14,8 @@ class Profile(models.Model):
         return f'{self.telegram_username}'
 
     class Meta:
-        verbose_name = "Пользователь"
-        verbose_name_plural = "Пользователь"
+        verbose_name = "Телеграм пользователь"
+        verbose_name_plural = "Телеграм пользователь"
 
 @receiver(post_save, sender=User)
 def create_or_update_user_profile(sender, instance, created, **kwargs):
