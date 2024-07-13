@@ -21,6 +21,7 @@ dist
 sqlite.db
 db.sqlite3
 **/migrations/*
+!__init__.py
 
 *.log
 .log
