@@ -1,0 +1,77 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:16
+    restart: always
+    env_file: ./postgres-db/.pg-env
+    volumes:
+      - ./persistentdata/db:/var/lib/postgresql/data
+
+  redis:
+    image: redis
+    restart: always
+
+  webapp:
+    build:
+      context: ./TubeMonitor
+    image: tubemonitor
+    restart: always
+    volumes:
+      - ./static:/app/static
+      - ./media:/app/media
+      - ./persistentdata/static:/var/www/static
+      - ./persistentdata/media:/var/www/media
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env
+
+  celery_worker:
+    build:
+      context: ./TubeMonitor
+    restart: always
+    depends_on:
+      - webapp
+    command: 'celery -A tubemonitor worker -l info --pool=solo'
+    env_file:
+      - .env
+
+  celery_beat:
+    build:
+      context: ./TubeMonitor
+    restart: always
+    depends_on:
+      - webapp
+    command: 'celery -A tubemonitor beat -l info'
+    env_file:
+      - .env
+
+  nginx:
+    build:
+      context: ./nginx
+    restart: always
+    depends_on:
+      - webapp
+    ports:
+      - "80:80"
+      - "443:443"
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    volumes:
+      - ./persistentdata/certbot/conf:/etc/letsencrypt
+      - ./persistentdata/certbot/www:/var/www/certbot
+      - ./persistentdata/static:/var/www/static
+      - ./persistentdata/media:/var/www/media
+
+  certbot:
+    image: certbot/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    volumes:
+      - ./persistentdata/certbot/conf:/etc/letsencrypt
+      - ./persistentdata/certbot/www:/var/www/certbot
+
+volumes:
+  static_volume:
+  media_volume:
+

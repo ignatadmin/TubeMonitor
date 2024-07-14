@@ -1,0 +1,3 @@
+POSTGRES_USER=baseusername
+POSTGRES_PASSWORD=basepass
+POSTGRES_DB=basename

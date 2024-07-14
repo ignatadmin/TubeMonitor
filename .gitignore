@@ -31,3 +31,6 @@ celerybeat-schedule.dat
 celerybeat-schedule.bak
 
 tubemonitor_cache
+
+locals_vars.py
+.pg-env

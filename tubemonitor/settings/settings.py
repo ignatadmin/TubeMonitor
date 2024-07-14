@@ -12,7 +12,7 @@ YOUTUBE_API_KEY = os.environ.get('YOUTUBE_API_KEY')
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['tubemonitor.ru']
 
 INTERNAL_IPS = ['127.0.0.1']
 
@@ -62,11 +62,11 @@ WSGI_APPLICATION = 'tubemonitor.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DATABASE_NAME'),
-        'USER': os.environ.get('DATABASE_USER'),
-        'PASSWORD': os.environ.get('DATABASE_PASSWORD'),
-        'HOST': os.environ.get('DATABASE_HOST'),
-        'PORT': os.environ.get('DATABASE_PORT'),
+        'NAME': __import__('tubemonitor.locals_vars').locals_vars.DATABASE_NAME,
+        'USER': __import__('tubemonitor.locals_vars').locals_vars.DATABASE_USER,
+        'PASSWORD': __import__('tubemonitor.locals_vars').locals_vars.DATABASE_PASSWORD,
+        'HOST': __import__('tubemonitor.locals_vars').locals_vars.DATABASE_HOST,
+        'PORT': '',
     }
 }
 
@@ -97,7 +97,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')]
 STATIC_ROOT = BASE_DIR / 'static'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
@@ -159,6 +159,7 @@ LOGGING = {
     },
 }
 
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
 SECURE_SSL_REDIRECT = True
